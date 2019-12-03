@@ -1,0 +1,12 @@
+TO DO:
+-Add pop up windows for each button item
+	- For add/remove user, one dialog box
+	- For add/remove friendship, two dialog boxes/ one w/ two fields?
+	- Same as above for mutual friends, shortest path
+	- Have status updates show the loaded file
+	- Have import/export bring up a FileChooser?
+
+-Visual graph diagram
+	- Look at project files uploaded by TAs for inspiration
+	- Middle node can be colored red, others can be colored black
+	- 

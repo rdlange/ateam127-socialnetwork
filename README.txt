@@ -6,7 +6,7 @@ Project name: Social Network
 Team Members:
 1. Robert Lange, 001, rdlange2@wisc.edu
 2. Yu Long, 001, long27@wisc.edu
-3. Joe Hershey, 001, joehershey@wisc.edu
+3. Joe Hershey, 001, jhershey@wisc.edu
 4. Lukas Her, 001, lnher2@wisc.edu
 5. Kevin Xiao, 001, klxiao@wisc.edu
 

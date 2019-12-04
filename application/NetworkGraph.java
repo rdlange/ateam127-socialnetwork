@@ -53,12 +53,13 @@ public class NetworkGraph {
    		vbox.setSpacing(8);
 		
 		//adds the central user to the VBox
-		Text center = new Text(centralUser);
+		Text center = new Text(“Friends of: “ + centralUser);
 		center.setFont(Font.font("Arial", FontWeight.BOLD, 14));
 		vbox.getChildren().add(center);
 		
 		
 		Button friend;
+		friend.
 		
 		//goes through all friends and make's them buttons, then adds to VBox
 		for (int i=0; i< friends.size(); i++) {

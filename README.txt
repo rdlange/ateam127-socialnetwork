@@ -12,7 +12,7 @@ Team Members:
 
 Notes or comments to the grader:
 
-Yu Long, Joe Hershey, Lukas Her, and Kevin Xiao were in x-team 127, and Robert Lange was in x-team 50.
+Yu Long, Joe Hershey, Lukas Her, and Kevin Xiao were in x-team 127, and Robert Lange was in x-team 127.
 
 [place any comments or notes that will help the grader here]
 

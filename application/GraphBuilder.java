@@ -29,20 +29,16 @@ public class GraphBuilder {
 	}
 	
 	class friendHandler implements EventHandler<ActionEvent> {
-
 		private Button button;
 		private GraphBuilder graphBuilderUsed;
-		
 		public friendHandler(Button friendButton, GraphBuilder builder) {
 			this.button = friendButton;
 			this.graphBuilderUsed = builder;
 		}
-
 		@Override
 		public void handle(ActionEvent e) {
 			graphBuilderUsed.setCenterButton(button.getText());
 		}
-		
 	}
 	
 	// return a vbox containing the center user's friends as buttons

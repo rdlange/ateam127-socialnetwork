@@ -9,16 +9,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-/**
-* for now, anything related to the SocialNetwork class has been commented
-* out until the class is implemented
-*
-*/
 public class NetworkGraph {
 	
-	
-	
-	
+	//private SocialNetwork network;
 	private String centralUser;
 	
 	//network = new SocialNetwork(); 
@@ -39,7 +32,7 @@ public class NetworkGraph {
 
 	public VBox visualizeGraph() {
 		
-		//commented out as the SocialNetwork class isn't established yet
+		//commented out as the SocialNetwork class isn¡¯t established yet
 		//ArrayList <String> friends = network.getFriendsOf(centralUser);
 		
 		//hardcoded so friends can be present without the network
@@ -47,20 +40,17 @@ public class NetworkGraph {
 		friends.add("friend1");
 		friends.add("friend2");
 		
-		//new VBox used to show central user in bold, and friends below
 		VBox vbox = new VBox();
 		vbox.setPadding(new Insets(10));
    		vbox.setSpacing(8);
-		
-		//adds the central user to the VBox
-		Text center = new Text(â€œFriends of: â€œ + centralUser);
-		center.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+
+		Text center = new Text(centralUser + " Friends:");
+		center.setFont(Font.font("Arial", FontWeight.BOLD, 12));
 		vbox.getChildren().add(center);
 		
 		
 		Button friend;
-		
-		//goes through all friends and make's them buttons, then adds to VBox
+
 		for (int i=0; i< friends.size(); i++) {
 			friend = new Button(friends.get(i));
         			vbox.setMargin(friend, new Insets(0, 0, 0, 8));

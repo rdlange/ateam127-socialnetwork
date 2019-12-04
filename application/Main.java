@@ -48,29 +48,27 @@ public class Main extends Application {
 
     // Create a vertical box containing a label and check boxes for the right panel
     VBox options = new VBox();
-    options.setSpacing(16.0);
+    options.setSpacing(8.0);
     // add buttons in a vbox for the options
     Button setCenterButton = new Button("Set Central User");
-    setCenterButton.setMinSize(150, 60);
+    setCenterButton.setMinSize(150, 50);
     Button addUserButton = new Button("Add User");
-    addUserButton.setMinSize(150, 60);
+    addUserButton.setMinSize(150, 50);
     Button removeUserButton = new Button("Remove User");
-    removeUserButton.setMinSize(150, 60);
+    removeUserButton.setMinSize(150, 50);
     Button addFriendshipButton = new Button("Add Friendship");
-    addFriendshipButton.setMinSize(150, 60);
+    addFriendshipButton.setMinSize(150, 50);
     Button removeFriendshipButton = new Button("Remove Friendship");
-    removeFriendshipButton.setMinSize(150, 60);
+    removeFriendshipButton.setMinSize(150, 50);
     Button importNetworkButton = new Button("Import Network");
-    importNetworkButton.setMinSize(150, 60);
+    importNetworkButton.setMinSize(150, 50);
     Button exportNetworkButton = new Button("Export Network");
-    exportNetworkButton.setMinSize(150, 60);
+    exportNetworkButton.setMinSize(150, 50);
     Button clearNetworkButton = new Button("Clear Network");
-    clearNetworkButton.setMinSize(150, 60);
+    clearNetworkButton.setMinSize(150, 50);
     options.getChildren().add(setCenterButton);
     options.getChildren().add(addUserButton);
     options.getChildren().add(removeUserButton);
-    options.getChildren().add(addFriendshipButton);
-    options.getChildren().add(removeFriendshipButton);
     options.getChildren().add(addFriendshipButton);
     options.getChildren().add(removeFriendshipButton);
     options.getChildren().add(importNetworkButton);
@@ -81,22 +79,39 @@ public class Main extends Application {
     HBox algorithmOptions = new HBox();
     algorithmOptions.setSpacing(32.0);
     Button mutualFriendsButton = new Button("Mutual Friends...");
-    mutualFriendsButton.setMinSize(150, 60);
+    mutualFriendsButton.setMinSize(150, 50);
     Button shortestPathButton = new Button("Shortest Path...");
-    shortestPathButton.setMinSize(150, 60);
+    shortestPathButton.setMinSize(150, 50);
     Button statusUpdatesButton = new Button("Status Updates");
-    statusUpdatesButton.setMinSize(150, 60);
+    statusUpdatesButton.setMinSize(150, 50);
     algorithmOptions.getChildren().add(mutualFriendsButton);
     algorithmOptions.getChildren().add(shortestPathButton);
     algorithmOptions.getChildren().add(statusUpdatesButton);
 
     // Main layout is Border Pane example (top,left,center,right,bottom)
     BorderPane root = new BorderPane();
+    Graph sampleGraph= new Graph();
+    sampleGraph.addEdge("user1", "user2");
+    sampleGraph.addEdge("user1", "user3");
+    sampleGraph.addEdge("user2", "user4");
+    
+    GraphBuilder visualGraph = new GraphBuilder(sampleGraph, "user1");
 
+    VBox left = new VBox();
+    left.setSpacing(80);
+    left.getChildren().add(new Label(""));
+    left.getChildren().add(visualGraph.getCenterUser());
+    
+    VBox center = new VBox();
+    center.setSpacing(80);
+    center.getChildren().add(new Label(""));
+    center.getChildren().add(visualGraph.getFriendsOfCenterUser());
+    
     // Set the elements to their respective panels
     root.setTop(logoView);
-    root.setLeft(portraitView);
-    root.setCenter(options);
+    root.setLeft(left);
+    root.setCenter(center);
+    root.setRight(options);
     root.setBottom(algorithmOptions);
     Scene mainScene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
 

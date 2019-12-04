@@ -59,7 +59,6 @@ public class NetworkGraph {
 		
 		
 		Button friend;
-		friend.
 		
 		//goes through all friends and make's them buttons, then adds to VBox
 		for (int i=0; i< friends.size(); i++) {

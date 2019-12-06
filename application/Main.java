@@ -1,5 +1,5 @@
 /*
- * ATEAM GUI
+ * ATEAM GUI CLASS
  */
 package application;
 import java.io.File;

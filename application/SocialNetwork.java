@@ -1,6 +1,6 @@
 /**
  * a social network of users from a file and constructs a Graph object according to the file. 
- * Keeps track of the user in the current ‘center’ of the graph in addition to friends to the 
+ * Keeps track of the user in the current â€˜centerâ€™ of the graph in addition to friends to the 
  * central user.
  * 
  * @authors Robert Lange, Lukas Her, Kevin Xiao, Yu Long, Joe Hershey
@@ -107,6 +107,10 @@ public class SocialNetwork {
      * @param filePath a relative path to the file they want to read
      */
     public void uploadNetwork(String filePath) {
+        
+    }
+    
+    public void setCentral(String central){
         
     }
     

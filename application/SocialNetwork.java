@@ -9,6 +9,7 @@
 package application;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SocialNetwork { 
     
@@ -37,7 +38,7 @@ public class SocialNetwork {
      * @param person the person to add to the social network
      */
     public void addPerson(String person) {
-        
+       this.graph.addVertex(person); 
     }
     
     /**
@@ -47,7 +48,7 @@ public class SocialNetwork {
      * @param person2 the new friend of person1
      */
     public void addFriends(String person1, String person2) {
-        
+        this.graph.addEdge(person1, person2);
     }
     
     /**
@@ -55,7 +56,7 @@ public class SocialNetwork {
      * @param person the person to remove
      */
     public void removePerson(String person) {
-        
+        this.graph.removeVertex(person);
     }
     
     /**
@@ -64,14 +65,16 @@ public class SocialNetwork {
      * @param person2 the person who used to be friends with person1
      */
     public void removeFriend(String person1, String person2) {
-        
+        this.graph.removeEdge(person1, person2);
     }
     
     /**
      * Removes all people from the social network.
      */
     public void removeAll() {
-    
+    	for (String user : graph.getAllVertices()) {
+    		graph.removeVertex(user);
+    	}
     }
     
     /**
@@ -80,8 +83,18 @@ public class SocialNetwork {
      * @param person2 the second person to find the friends of
      * @return an array list of all of the friends person1 and person2 share
      */
-    public ArrayList<String> getMutualFriends(String person1, String person2) {
-        return null;
+    public List<String> getMutualFriends(String person1, String person2) {
+        List<String> user1Friends = graph.getAdjacentVerticesOf(person1);
+        List<String> user2Friends = graph.getAdjacentVerticesOf(person2);
+        List<String> mutualFriends = new ArrayList<String>();
+        for (String friendOfUser1 : user1Friends) {
+        	for (String friendOfUser2 : user2Friends) {
+        		if (friendOfUser1.equals(friendOfUser2)) {
+        			mutualFriends.add(friendOfUser1);
+        		}
+        	}
+        }
+        return mutualFriends;
     }
     
     /**
@@ -91,8 +104,9 @@ public class SocialNetwork {
      * @param person2 the ending person
      * @return an ordered list of how to get from person1 to person2
      */
-    public ArrayList<String> getShortestPath(String person1, String person2) {
-        return null;
+    public List<String> getShortestPath(String person1, String person2) {
+        // TODO
+    	return null;
     }
     
     /**

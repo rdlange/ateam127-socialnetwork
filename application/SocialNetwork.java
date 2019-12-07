@@ -127,7 +127,15 @@ public class SocialNetwork {
      * Saves the log of this SocialNetwork to a text file.
      */
     public void saveNetwork() {
-        
+        try {
+            FileWriter writer = new FileWriter("network.txt");
+            for (String str: log) {
+                writer.write(str + "\n");
+            }
+                writer.close();
+            } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     /**

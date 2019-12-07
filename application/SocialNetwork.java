@@ -114,6 +114,10 @@ public class SocialNetwork {
         
     }
     
+    public int connectedComponent(){
+        return 0;
+    }
+    
     /**
      * Returns the current log of this SocialNetwork.
      * @return an array list of all the commands input

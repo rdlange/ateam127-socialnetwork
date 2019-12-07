@@ -1,3 +1,4 @@
+  
 /**
  * a social network of users from a file and constructs a Graph object according to the file. 
  * Keeps track of the user in the current ‘center’ of the graph in addition to friends to the 
@@ -17,20 +18,28 @@ public class SocialNetwork {
     private ArrayList<String> log;//an array list used to keep track of the user's inputs
     
     /**
+     * Constructor for SocialNetwork class
+     */
+    public SocialNetwork() {
+        graph = new Graph();
+        log = new ArrayList<String>();
+    }
+    
+    /**
      * Returns a list of friends of the given user
      * @param name the name of the person they want to get the friends of
      * @return an array list of the names of the person's friends
      */
-    public ArrayList<String> getFriendsOf(String name) {
-        return null;
+    public List<String> getFriendsOf(String name) {
+        return this.graph.getAdjacentVerticesOf(name);
     }
     
     /**
      * Returns a list of all the users in this SocialNetwork
      * @return an array list of all users in the social network
      */
-    public ArrayList<String> getAllUsers() {
-        return null;
+    public List<String> getAllUsers() {
+        return this.graph.getAllVertices();
     }
     
     /**
@@ -38,7 +47,8 @@ public class SocialNetwork {
      * @param person the person to add to the social network
      */
     public void addPerson(String person) {
-       this.graph.addVertex(person); 
+       this.graph.addVertex(person);
+       log.add("a " + person);
     }
     
     /**
@@ -49,6 +59,7 @@ public class SocialNetwork {
      */
     public void addFriends(String person1, String person2) {
         this.graph.addEdge(person1, person2);
+        log.add("a " + person1 + " " + person2);
     }
     
     /**
@@ -57,6 +68,7 @@ public class SocialNetwork {
      */
     public void removePerson(String person) {
         this.graph.removeVertex(person);
+        log.add("r " + person);
     }
     
     /**
@@ -66,15 +78,17 @@ public class SocialNetwork {
      */
     public void removeFriend(String person1, String person2) {
         this.graph.removeEdge(person1, person2);
+        log.add("r " + person1 + " " + person2);
     }
     
     /**
      * Removes all people from the social network.
      */
     public void removeAll() {
-    	for (String user : graph.getAllVertices()) {
-    		graph.removeVertex(user);
-    	}
+        for (String user : graph.getAllVertices()) {
+            graph.removeVertex(user);
+            log.add("r " + user);
+        }
     }
     
     /**
@@ -88,11 +102,11 @@ public class SocialNetwork {
         List<String> user2Friends = graph.getAdjacentVerticesOf(person2);
         List<String> mutualFriends = new ArrayList<String>();
         for (String friendOfUser1 : user1Friends) {
-        	for (String friendOfUser2 : user2Friends) {
-        		if (friendOfUser1.equals(friendOfUser2)) {
-        			mutualFriends.add(friendOfUser1);
-        		}
-        	}
+            for (String friendOfUser2 : user2Friends) {
+                if (friendOfUser1.equals(friendOfUser2)) {
+                    mutualFriends.add(friendOfUser1);
+                }
+            }
         }
         return mutualFriends;
     }
@@ -105,8 +119,8 @@ public class SocialNetwork {
      * @return an ordered list of how to get from person1 to person2
      */
     public List<String> getShortestPath(String person1, String person2) {
-        // TODO
-    	return null;
+        
+        return null;
     }
     
     /**
@@ -124,10 +138,18 @@ public class SocialNetwork {
         
     }
     
+    /**
+     * 
+     * @param central user to set as central user
+     */
     public void setCentral(String central){
         
     }
     
+    /**
+     * 
+     * @return
+     */
     public int connectedComponent(){
         return 0;
     }
@@ -137,6 +159,6 @@ public class SocialNetwork {
      * @return an array list of all the commands input
      */
     public ArrayList<String> getLog() {
-        return null;
+        return log;
     }
 }

@@ -9,6 +9,8 @@
  */
 package application;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,7 +78,7 @@ public class SocialNetwork {
      * @param person1 the person who used to be friends with person2
      * @param person2 the person who used to be friends with person1
      */
-    public void removeFriend(String person1, String person2) {
+    public void removeFriends(String person1, String person2) {
         this.graph.removeEdge(person1, person2);
         log.add("r " + person1 + " " + person2);
     }

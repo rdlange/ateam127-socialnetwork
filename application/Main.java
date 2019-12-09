@@ -1,8 +1,10 @@
 /*
- * ATEAM GUI
+ * ATEAM GUI CLASS
  */
 package application;
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javafx.application.Application;
@@ -47,6 +49,8 @@ public class Main extends Application {
   private static final int WINDOW_WIDTH = 800;
   private static final int WINDOW_HEIGHT = 640;
   private static final String APP_TITLE = "GetSocial - Social Network Visaulizer";
+  private SocialNetwork socialNetwork = new SocialNetwork();
+  private NetworkGraph graph = new NetworkGraph();
   @Override
   public void start(Stage primaryStage) throws Exception {
 	// save any args passed to the program
@@ -58,7 +62,6 @@ public class Main extends Application {
 	// create a picutre for the center panel
 	//Image portrait = new Image("portrait.png");
 	//ImageView portraitView = new ImageView(portrait);
-	NetworkGraph graph = new NetworkGraph();
 	VBox network = graph.visualizeGraph();
 	
 	// Create a vertical box containing a label and check boxes for the right panel
@@ -86,13 +89,13 @@ public class Main extends Application {
        });
 	
 	Button removeUserButton = new Button("Remove User");
+	removeUserButton.setMinSize(150, 50);
 	removeUserButton.setOnAction(new EventHandler<ActionEvent>() {
 		 @Override
          public void handle(ActionEvent event) {
 			 removeUser();
            }
        });
-	removeUserButton.setMinSize(150, 50);
 	
 	Button addFriendshipButton = new Button("Add Friendship");
 	addFriendshipButton.setMinSize(150, 50);
@@ -119,7 +122,9 @@ public class Main extends Application {
 		@Override
 		public void handle(final ActionEvent e) {
 			File file = fileChooser.showOpenDialog(primaryStage);
-	                   
+	                   if (file != null) {
+	                	   socialNetwork.uploadNetwork(file);
+	                   }
 	                }
 	            });
 	
@@ -129,18 +134,20 @@ public class Main extends Application {
 		@Override
 		public void handle(final ActionEvent e) {
 			File file = fileChooser.showOpenDialog(primaryStage);
-	                   
+	                   if (file != null) {
+	                	   socialNetwork.saveNetwork(file);
+	                   }
 	                }
 	            });
 	
 	Button clearNetworkButton = new Button("Clear Network");
+	clearNetworkButton.setMinSize(150, 50);
 	clearNetworkButton.setOnAction(new EventHandler<ActionEvent>() {
 		@Override
 		public void handle(ActionEvent event) {
 			clearAll();
          }
      });
-	clearNetworkButton.setMinSize(150, 50);
 	
 	// add the buttons on the right panel
 	options.getChildren().add(setCenterButton);
@@ -236,31 +243,48 @@ public class Main extends Application {
   }
   
   private void setCenter() { 
-      TextInputDialog dialog = new TextInputDialog("a-z,0-9,underscore and apostrophe only");
+      TextInputDialog dialog = new TextInputDialog();
       dialog.setTitle("Set Center User");
-      dialog.setHeaderText("Enter center username:");
-      dialog.setContentText("Name:");
+      dialog.setHeaderText("Enter the username you want to set as center:");
+      dialog.setContentText("Username:");
       Optional<String> result = dialog.showAndWait();
+		if (result.isPresent() && result.get().isEmpty()){
+		    invalid();
+		}
+      if (result.isPresent() && !result.get().isEmpty()) {
+    	  socialNetwork.setCentral(result.get());
+      }
   }
   
   
   private void addUser() { 
-      TextInputDialog dialog = new TextInputDialog("a-z,0-9,underscore and apostrophe only");
+      TextInputDialog dialog = new TextInputDialog();
       dialog.setTitle("Add User");
       dialog.setHeaderText("Enter your new user name:");
       dialog.setContentText("Name:");
       Optional<String> result = dialog.showAndWait();
+		if (result.isPresent() && result.get().isEmpty()){
+		    invalid();
+		}
+      if (result.isPresent() && !result.get().isEmpty()) {
+    	  socialNetwork.addPerson(result.get());
+      }
   }
   
   private void removeUser() { 
-      TextInputDialog dialog = new TextInputDialog("a-z,0-9,underscore and apostrophe only");
+      TextInputDialog dialog = new TextInputDialog();
       dialog.setTitle("Remove User");
       dialog.setHeaderText("Enter your username you want to remove:");
       dialog.setContentText("Name:");
       Optional<String> result = dialog.showAndWait();
+		if (result.isPresent() && result.get().isEmpty()){
+		    invalid();
+		}
+      if (result.isPresent() && !result.get().isEmpty()) {
+    	  socialNetwork.removePerson(result.get());
+      }
   }
   
-
 	private void addFriend() {
 		// Create the custom dialog.
 	    Dialog<Pair<String, String>> dialog = new Dialog<>();
@@ -301,7 +325,12 @@ public class Main extends Application {
 	    Optional<Pair<String, String>> result = dialog.showAndWait();
 
 	    result.ifPresent(pair -> {
-	        System.out.println("From=" + pair.getKey() + ", To=" + pair.getValue());
+	        if (!pair.getKey().isEmpty() && !pair.getValue().isEmpty()) {
+	        	socialNetwork.addFriends(pair.getKey(), pair.getValue());
+	        }
+	        else {
+	        	invalid();
+	        }
 	    });
 	}
 	
@@ -346,6 +375,12 @@ public class Main extends Application {
 	    Optional<Pair<String, String>> result = dialog.showAndWait();
 
 	    result.ifPresent(pair -> {
+	    	if (!pair.getKey().isEmpty() && !pair.getValue().isEmpty()) {
+	        	socialNetwork.removeFriend(pair.getKey(), pair.getValue());
+	    	}
+	    	else {
+	    		invalid();
+	    	}
 	    });
 	}
 	
@@ -354,34 +389,25 @@ public class Main extends Application {
 		alert.setTitle("Clear All");
 		alert.setHeaderText(null);
 		alert.setContentText("Are you sure you want to clear the network?");
-
 		Optional<ButtonType> result = alert.showAndWait();
-	}
-	
-	private void importNetwork() {
-		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Open Resource File");
-	//	fileChooser.showOpenDialog(stage);
-	}
-	
-	private void exportNetwork() {
-		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Open Resource File");
-	//	fileChooser.showOpenDialog(stage);
+		if (result.isPresent() && !result.isEmpty()) {
+			socialNetwork.removeAll();
+		}
 	}
 	
 	private void updates() {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Status Updates");
 		alert.setHeaderText("Here is a list of changes you have made");
-		alert.setContentText("a deb\r\n" + 
-				"r brian\r\n" + 
-				"a sapan\r\n" + 
-				"r deb\r\n" + 
-				"a brian\r\n" + 
-				"s brian\r\n" + 
-				"");
-
+		ArrayList<String> result = socialNetwork.getLog();
+		String s = "";
+		for (int i = 0; i < result.size(); i++) {
+			s += result.get(i) + "\n";
+		}
+		if (result.size() == 0) {
+			s = "No command entered yet";
+		}
+		alert.setContentText(s);
 		alert.showAndWait();
 	}
 	
@@ -410,7 +436,10 @@ public class Main extends Application {
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK){
 		    goodbye();
-		} 
+		}
+		else {
+			close();
+		}
 	}
 	
 	private void confirmSave() {
@@ -422,19 +451,52 @@ public class Main extends Application {
 		if (result.get() == ButtonType.OK){
 		    save();
 		} 
+		else {
+			close();
+		}
 	}
 	
 	private void save() {
-		TextInputDialog dialog = new TextInputDialog("File Name");
+		TextInputDialog dialog = new TextInputDialog();
 		dialog.setTitle("Save");
 		dialog.setHeaderText("Save");
 		dialog.setContentText("Enter file name:");
 
 		// Traditional way to get the response value.
 		Optional<String> result = dialog.showAndWait();
-		if (result.isPresent()){
-		    saved();
+		if (result.isPresent() && result.get().isEmpty()) {
+			invalid();
 		}
+		if (result.isPresent() && !result.get().isEmpty()){
+			String filename = result.get() + ".txt";
+			File file = new File("./", filename);
+			if (file.exists()) {
+				socialNetwork.saveNetwork(file);
+				saved();
+			}
+			else {
+				try {
+					if (file.createNewFile()) {
+						socialNetwork.saveNetwork(file);
+					    saved();
+					}
+					else {
+						failed();
+					}
+				} catch (Exception e) {
+					failed();
+				}
+			}
+		}
+	}
+	
+	private void failed() {
+		Alert alert = new Alert(AlertType.WARNING);
+		alert.setTitle("Failed");
+		alert.setHeaderText(null);
+		alert.setContentText("Failed to create file. Please try again");
+		alert.showAndWait();
+		save();
 	}
 	
 	private void saved() {
@@ -498,6 +560,9 @@ public class Main extends Application {
 	    	if (!pair.getKey().isEmpty() && !pair.getValue().isEmpty()) {
 	    		mutualResult(pair.getKey(),pair.getValue());
 	    	}
+	    	else {
+	    		invalid();
+	    	}
 	    });
 	}
 	
@@ -505,8 +570,8 @@ public class Main extends Application {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Mutual Friends");
 		alert.setHeaderText("There is a list of mutual frinds between " + user1 + "and " + user2 + ":");
-		alert.setContentText("Joe, Robert, Yu");
-
+		String result = graph.getMutualFriends(user1, user2);
+		alert.setContentText(result);
 		alert.showAndWait();
 	}
 	
@@ -551,7 +616,10 @@ public class Main extends Application {
 
 	    result.ifPresent(pair -> {
 	    	if (!pair.getKey().isEmpty() && !pair.getValue().isEmpty()) {
-	    		mutualResult(pair.getKey(),pair.getValue());
+	    		shortestResult(pair.getKey(),pair.getValue());
+	    	}
+	    	else {
+	    		invalid();
 	    	}
 	    });
 	}
@@ -560,7 +628,8 @@ public class Main extends Application {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Shortest Path");
 		alert.setHeaderText("The shortest path between " + user1 + "and " + user2 + "is:");
-		alert.setContentText("Joe, Robert, Yu");
+		String result = graph.getShortestPath(user1, user2);
+		alert.setContentText(result);
 		alert.showAndWait();
 	}
 	
@@ -568,9 +637,21 @@ public class Main extends Application {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Connected Components");
 		alert.setHeaderText("The number of connected components is:");
-		alert.setContentText("2");
+		int result = socialNetwork.connectedComponent();
+		alert.setContentText(String.valueOf(result));
 		alert.showAndWait();
 	}
+	
+	private void invalid() {
+		Alert alert = new Alert(AlertType.WARNING);
+		alert.setTitle("Invalid input");
+		alert.setHeaderText(null);
+		alert.setContentText("Invalid input. Please try again.");
+
+		alert.showAndWait();
+	}
+	
+	// validation check
 	
   /**
    * @param args

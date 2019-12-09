@@ -123,7 +123,13 @@ public class Main extends Application {
 		public void handle(final ActionEvent e) {
 			File file = fileChooser.showOpenDialog(primaryStage);
 	                   if (file != null) {
-	                	   socialNetwork.uploadNetwork(file);
+	                	   try {
+	                		   socialNetwork.uploadNetwork(file);
+	                	   } catch(IllegalArgumentException e1) {
+	                		   mistake();
+	                	   } catch(Exception e2) {
+	                		   failedEx();
+	                	   }
 	                   }
 	                }
 	            });
@@ -135,7 +141,11 @@ public class Main extends Application {
 		public void handle(final ActionEvent e) {
 			File file = fileChooser.showOpenDialog(primaryStage);
 	                   if (file != null) {
-	                	   socialNetwork.saveNetwork(file);
+	                	   try {
+							socialNetwork.saveNetwork(file);
+							} catch(Exception e1) {
+								failedEx();
+							}
 	                   }
 	                }
 	            });
@@ -471,8 +481,12 @@ public class Main extends Application {
 			String filename = result.get() + ".txt";
 			File file = new File("./", filename);
 			if (file.exists()) {
-				socialNetwork.saveNetwork(file);
-				saved();
+				try {
+					socialNetwork.saveNetwork(file);
+					saved();
+				}catch(Exception e) {
+					failed();
+				}
 			}
 			else {
 				try {
@@ -488,6 +502,22 @@ public class Main extends Application {
 				}
 			}
 		}
+	}
+	
+	private void failedEx() {
+		Alert alert = new Alert(AlertType.WARNING);
+		alert.setTitle("Failed");
+		alert.setHeaderText(null);
+		alert.setContentText("Failed during accesing file. Please try again");
+		alert.showAndWait();
+	}
+	
+	private void mistake() {
+		Alert alert = new Alert(AlertType.WARNING);
+		alert.setTitle("Error");
+		alert.setHeaderText(null);
+		alert.setContentText("Failed. Invalid file input.");
+		alert.showAndWait();
 	}
 	
 	private void failed() {

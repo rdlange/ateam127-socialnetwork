@@ -195,8 +195,8 @@ public class Graph {
 	 * 
 	 * @return a HashSet containing all the vertices in the graph
 	 */
-	public Set<String> getAllVertices() {
-		Set<String> vertices = new HashSet<String>();
+	public List<String> getAllVertices() {
+		List<String> vertices = new ArrayList<String>();
 		// store all the vertices in the graph in a HashSet (HashSet is chosen for time
 		// efficiency)
 		for (GraphNode<String> node : vertexList) {
@@ -204,6 +204,7 @@ public class Graph {
 		}
 		return vertices;
 	}
+
 
 	/**
 	 * Get all the neighbor (adjacent) vertices of a vertex

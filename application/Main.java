@@ -1,6 +1,14 @@
-/*
- * ATEAM GUI CLASS
+/**
+ * Main displayed the GUI used by the Social Network visualizer.
+ * 
+ * Filename: Main.java
+ * Project: A-Team project (Social Network)
+ * Authors: Robert Lange, Yu Long, Joe Hershey, Kevin Xiao, Lukas Her
+ * Email: rdlange2@wisc.edu, long27@wisc.edu, joehershey@wisc.edu, klxiao@wisc.edu, lnher2@wisc.edu
+ * Lecture: 001
+ * Due: December 11th, 2019 (11:59pm) 
  */
+
 package application;
 import java.io.File;
 import java.io.IOException;
@@ -38,19 +46,29 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+
 /**
- * ATEAM PROJECT
- *
+ * The Main class uses JavaFX to display the graphic user interface of this social network
+ * visualizer. It displays the buttons the user can interact with in addition to a visual
+ * graph representation of the current social network.
  */
 public class Main extends Application {
   // store any command-line arguments that were entered.
   // NOTE: this.getParameters().getRaw() will get these also
   private List<String> args;
+  // Set the window height, width, and title.
   private static final int WINDOW_WIDTH = 800;
   private static final int WINDOW_HEIGHT = 640;
   private static final String APP_TITLE = "GetSocial - Social Network Visaulizer";
   private SocialNetwork socialNetwork = new SocialNetwork();
   private NetworkGraph graph = new NetworkGraph();
+  
+  /*
+  * Method used to create the GUI buttons and place them onto the stage. After
+  * constructing the stage, the method will display the GUI to the user.
+  *
+  * @param primaryStage - the stage used by this method
+  */
   @Override
   public void start(Stage primaryStage) throws Exception {
 	// save any args passed to the program
@@ -59,16 +77,9 @@ public class Main extends Application {
 	Image logo = new Image("logo.png");
 	ImageView logoView = new ImageView(logo);
 	
-	// create a picutre for the center panel
-	//Image portrait = new Image("portrait.png");
-	//ImageView portraitView = new ImageView(portrait);
 	VBox network = graph.visualizeGraph();
-	
-	// Create a vertical box containing a label and check boxes for the right panel
-	VBox options = new VBox();
-	options.setSpacing(12.0);
-	// add buttons in a vbox for the options
-	
+
+	// create the 'Set Central User' button
 	Button setCenterButton = new Button("Set Central User");
 	setCenterButton.setMinSize(150, 50);
 	setCenterButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -78,7 +89,7 @@ public class Main extends Application {
          }
      });
 	
-	
+	// create the 'Add User' button
 	Button addUserButton = new Button("Add User");
 	addUserButton.setMinSize(150, 50);
 	addUserButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -88,6 +99,7 @@ public class Main extends Application {
            }
        });
 	
+	// create the 'Remove User' button
 	Button removeUserButton = new Button("Remove User");
 	removeUserButton.setMinSize(150, 50);
 	removeUserButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -97,6 +109,7 @@ public class Main extends Application {
            }
        });
 	
+	// create the 'Add Friendship' button
 	Button addFriendshipButton = new Button("Add Friendship");
 	addFriendshipButton.setMinSize(150, 50);
 	addFriendshipButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -106,6 +119,7 @@ public class Main extends Application {
           }
       });
 	
+	  // create the 'Remove Friendship' button
 	Button removeFriendshipButton = new Button("Remove Friendship");
 	removeFriendshipButton.setMinSize(150, 50);
 	removeFriendshipButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -115,6 +129,7 @@ public class Main extends Application {
          }
      });
 	
+	// create the 'Import Network' button
 	Button importNetworkButton = new Button("Import Network");
 	importNetworkButton.setMinSize(150, 50);
 	final FileChooser fileChooser = new FileChooser();
@@ -134,6 +149,7 @@ public class Main extends Application {
 	                }
 	            });
 	
+	// create the 'Export Network' button
 	Button exportNetworkButton = new Button("Export Network");
 	exportNetworkButton.setMinSize(150, 50);
 	exportNetworkButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -150,6 +166,7 @@ public class Main extends Application {
 	                }
 	            });
 	
+	// create the 'Clear Network' button
 	Button clearNetworkButton = new Button("Clear Network");
 	clearNetworkButton.setMinSize(150, 50);
 	clearNetworkButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -159,7 +176,11 @@ public class Main extends Application {
          }
      });
 	
-	// add the buttons on the right panel
+	// create a vertical box containing the buttons for the user to click on
+	VBox options = new VBox();
+	options.setSpacing(12.0);
+	  
+	// add the buttons to the vbox (which will be in the right panel)
 	options.getChildren().add(setCenterButton);
 	options.getChildren().add(addUserButton);
 	options.getChildren().add(removeUserButton);
@@ -169,10 +190,7 @@ public class Main extends Application {
 	options.getChildren().add(exportNetworkButton);
 	options.getChildren().add(clearNetworkButton);
 	
-	
-	// create an hbox of buttons for the bottom panel
-	HBox algorithmOptions = new HBox();
-	algorithmOptions.setSpacing(22.0);
+	// create the 'Find Mutual Friends' button
 	Button mutualFriendsButton = new Button("Find Mutual Friends");
 	mutualFriendsButton.setMinSize(140, 50);
 	mutualFriendsButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -182,6 +200,7 @@ public class Main extends Application {
          }
      });
 	
+	// create the 'Find Shortest Path' button
 	Button shortestPathButton = new Button("Find Shortest Path");
 	shortestPathButton.setMinSize(120, 50);
 	shortestPathButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -191,6 +210,7 @@ public class Main extends Application {
          }
      });
 	
+	// create the 'Status Updates' button
 	Button statusUpdatesButton = new Button("Status Updates");
 	statusUpdatesButton.setMinSize(130, 50);
 	statusUpdatesButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -200,6 +220,7 @@ public class Main extends Application {
          }
      });
 	
+	// create the 'Connected Components' button
 	Button connectedComponentButton = new Button("Connected Components");
 	connectedComponentButton.setMinSize(150, 50);
 	connectedComponentButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -209,36 +230,45 @@ public class Main extends Application {
          }
      });
 	
+	// create the 'Exit' button
 	Button closeButton = new Button("Exit");
+	closeButton.setMinSize(150, 50);
 	closeButton.setOnAction(new EventHandler<ActionEvent>() {
 		@Override
 		public void handle(ActionEvent event) {
 			close();
          }
      });
-	closeButton.setMinSize(150, 50);
 	
-	        
+	// create an hbox of buttons for the bottom panel
+	HBox algorithmOptions = new HBox();
+	algorithmOptions.setSpacing(22.0);
+	
+	// add each of the buttons to the hbox (which will be displayed in the bottom panel)
 	algorithmOptions.getChildren().add(mutualFriendsButton);
 	algorithmOptions.getChildren().add(shortestPathButton);
 	algorithmOptions.getChildren().add(statusUpdatesButton);
 	algorithmOptions.getChildren().add(connectedComponentButton);
 	algorithmOptions.getChildren().add(closeButton);
+	 
 	// Main layout is Border Pane example (top,left,center,right,bottom)
 	BorderPane root = new BorderPane();
 	root.setPadding(new Insets(10));
 	Button centralUserButton = new Button(graph.getCentralUser());
 	centralUserButton.setMinHeight(100);
+	
 	// Use VBoxes for aesthetic spacing purposes on left panel
 	VBox leftBox = new VBox();
 	leftBox.setSpacing(160.0);
 	leftBox.getChildren().add(new Label(""));
 	leftBox.getChildren().add(centralUserButton);
+	
 	// Use VBoxes for aesthetic spacing purposes on center panel
 	VBox center = new VBox();
 	center.setSpacing(160.0);
 	center.getChildren().add(new Label(""));
 	center.getChildren().add(network);
+	
 	// Set the elements to their respective panels
 	root.setTop(logoView);
 	root.setLeft(leftBox);
@@ -246,6 +276,7 @@ public class Main extends Application {
 	root.setRight(options);
 	root.setBottom(algorithmOptions);
 	Scene mainScene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
+	
 	// Set the primary stage
 	primaryStage.setTitle(APP_TITLE);
 	primaryStage.setScene(mainScene);

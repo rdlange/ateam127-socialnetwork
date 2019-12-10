@@ -1,13 +1,12 @@
 package application;
 
-
 /**
  * Undirected and unweighted graph implementation used by the Social Network visualizer.
  * 
  * Filename: Graph.java
  * Project: A-Team project (Social Network)
- * Authors: Robert Lange
- * Email: rdlange2@wisc.edu
+ * Authors: Robert Lange, Yu Long, Joe Hershey, Kevin Xiao, Lukas Her
+ * Email: rdlange2@wisc.edu, long27@wisc.edu, joehershey@wisc.edu, klxiao@wisc.edu, lnher2@wisc.edu
  * Lecture: 001
  * Due: December 11th, 2019 (11:59pm) 
  */
@@ -54,6 +53,8 @@ public class Graph {
 	/**
 	 * Add new vertex to the graph. Does not add null vertices or vertices
 	 * already in the graph.
+	 *
+	 * @param vertex - The data to store in the new vertex
 	 */
 	public void addVertex(String vertex) {
 		// do not add the vertex if it is null
@@ -111,7 +112,7 @@ public class Graph {
 
 	/**
 	 * Private helper method used to find a graph node from a provided string.
-	 * Primarily used in remove to remove a vertex object from the graph.
+	 * Primarily used in remove to remove a vertex from the graph.
 	 * 
 	 * @param vertex - the vertex string to find in the matching node
 	 * @return a reference to the node with the matching value, null if this node is
@@ -128,13 +129,12 @@ public class Graph {
 	}
 
 	/**
-	 * Add the edge between to vertices in the graph. (edge is undirected and
-	 * unweighted) If either vertex does not exist, add vertex, and add edge, no
-	 * exception is thrown. If the edge exists in the graph, no edge is added and no
-	 * exception is thrown.
-	 * 
-	 * Valid argument conditions: 1. neither vertex is null 2. both vertices are in
-	 * the graph 3. the edge is not in the graph
+	 * Add the edge between two vertices in the graph. (edge is undirected and
+	 * unweighted). If either vertex does not exist in the graph, add it to the
+	 * graph and then insert the edge.
+	 *
+	 * @param vertex1 - the first vertex to add the new edge to
+	 * @param vertex2 - the second vertex to add the new edge to
 	 */
 	public void addEdge(String vertex1, String vertex2) {
 		// do not add an edge between the vertices if either one is null
@@ -204,7 +204,6 @@ public class Graph {
 		}
 		return vertices;
 	}
-
 
 	/**
 	 * Get all the neighbor (adjacent) vertices of a vertex

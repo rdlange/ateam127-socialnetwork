@@ -32,7 +32,7 @@ public class NetworkGraph {
 
 	public VBox visualizeGraph() {
 		
-		//commented out as the SocialNetwork class isn¡¯t established yet
+		//commented out as the SocialNetwork class isnÂ¡Â¯t established yet
 		//ArrayList <String> friends = network.getFriendsOf(centralUser);
 		
 		//hardcoded so friends can be present without the network
@@ -58,6 +58,16 @@ public class NetworkGraph {
     		}
 		return vbox;
     	}
+	
+	
+	public String getMutualFriends(String user1, String user2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getShortestPath(String user1, String user2) {
+		// TODO Auto-generated method stub
+		return null;
       }
 
 

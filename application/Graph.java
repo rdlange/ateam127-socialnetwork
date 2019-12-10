@@ -5,20 +5,18 @@ package application;
  * 
  * Filename: Graph.java
  * Project: A-Team project (Social Network)
- * Authors: Robert Lange, Yu Long, Joe Hershey, Kevin Xiao, Lukas Her
- * Email: rdlange2@wisc.edu, long27@wisc.edu, joehershey@wisc.edu, klxiao@wisc.edu, lnher2@wisc.edu
+ * Authors: Robert Lange
+ * Email: rdlange2@wisc.edu
  * Lecture: 001
  * Due: December 11th, 2019 (11:59pm) 
  */
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.HashSet;
 
 /**
  * This is the graph implementation that is used by the social network. It
- * is an undirected directed, unweighted graph consisting of vertices. The vertices store
+ * is an undirected, unweighted graph consisting of vertices. The vertices store
  * strings and adjacency lists.
  */
 public class Graph {
@@ -31,19 +29,17 @@ public class Graph {
 	// graph
 	private int size;
 
-	/*
-	 * Default no-argument constructor
-	 */
+	// construct a new graph with no vertices in it
 	public Graph() {
 		this.vertexList = new ArrayList<GraphNode<String>>();
 	}
 
 	private class GraphNode<T> {
-		// the data stored by this node
+		// the data stored by this vertex
 		private String data;
-		// the adjacencyList contains a list of adjacent vertices
+		// stores a list of adjacent vertices
 		private List<GraphNode<String>> adjacencyList;
-		// construct a vertex with the value 'vertex' and an adjacency list.
+		// construct a vertex with value 'vertex' and an adjacency list.
 		private GraphNode(String vertex) {
 			this.data = vertex;
 			this.adjacencyList = new ArrayList<GraphNode<String>>();
@@ -53,23 +49,19 @@ public class Graph {
 	/**
 	 * Add new vertex to the graph. Does not add null vertices or vertices
 	 * already in the graph.
-	 *
-	 * @param vertex - The data to store in the new vertex
 	 */
 	public void addVertex(String vertex) {
-		// do not add the vertex if it is null
+		// do nothing if the vertex is null
 		if (vertex == null) {
 			return;
 		}
-		// if the vertex already exists in the graph, do not add it to the graph
+		// do nothing if the vertex is in the graph
 		for (int i = 0; i < vertexList.size(); ++i) {
 			if (vertexList.get(i) != null && vertexList.get(i).data.equals(vertex)) {
 				return;
 			}
 		}
-		// construct a new graph node containing the non-null vertex and add it to the
-		// vertexList.
-		// then increase the order (number of vertices) of the graph.
+		// add the new vertex to the graph
 		GraphNode<String> S = new GraphNode<String>(vertex);
 		vertexList.add(S);
 		this.order++;
@@ -85,8 +77,7 @@ public class Graph {
 		// each node
 		for (GraphNode<String> currentVertex : vertexList) {
 			// check all the edges in the graph and delete any edges going from an adjacent
-			// vertex to the
-			// deleted vertex
+			// vertex to the deleted vertex
 			for (int i = 0; i < currentVertex.adjacencyList.size(); ++i) {
 				if (currentVertex.adjacencyList.get(i).data.equals(vertex)) {
 					currentVertex.adjacencyList.remove(i);
@@ -102,8 +93,7 @@ public class Graph {
 		}
 		// remove the vertex from the graph (if it exists in the graph)
 		GraphNode<String> vertexToRemove = getVertexFromString(vertex);
-		// if the vertex was found, remove it from the vertexList and decrease the
-		// number of vertices in the graph.
+		// remove the vertex if it is found
 		if (vertexToRemove != null) {
 			this.vertexList.remove(getVertexFromString(vertex));
 			this.order--;
@@ -111,64 +101,55 @@ public class Graph {
 	}
 
 	/**
-	 * Private helper method used to find a graph node from a provided string.
-	 * Primarily used in remove to remove a vertex from the graph.
+	 * Private helper method used to find a vertex from a provided string.
+	 * Primarily used to remove vertices from the graph.
 	 * 
-	 * @param vertex - the vertex string to find in the matching node
-	 * @return a reference to the node with the matching value, null if this node is
-	 *         not in the graph
+	 * @param vertex - the vertex to look for in the graph
+	 * @return the matching vertex
 	 */
 	private GraphNode<String> getVertexFromString(String vertex) {
-		for (GraphNode<String> currentVertex : vertexList) {
-			if (currentVertex.data.equals(vertex)) {
-				return currentVertex;
+		// check every vertex in the graph for the matching data
+		for (GraphNode<String> node : vertexList) {
+			if (node.data.equals(vertex)) {
+				return node;
 			}
 		}
-		// if the vertex node is not found in the graph, return null
+		// if the vertex is not found, return null
 		return null;
 	}
 
 	/**
-	 * Add the edge between two vertices in the graph. (edge is undirected and
-	 * unweighted). If either vertex does not exist in the graph, add it to the
-	 * graph and then insert the edge.
-	 *
-	 * @param vertex1 - the first vertex to add the new edge to
-	 * @param vertex2 - the second vertex to add the new edge to
+	 * Add the edge between to vertices in the graph (edge is undirected and
+	 * unweighted). Add the vertices to the graph if they are not already present.
 	 */
 	public void addEdge(String vertex1, String vertex2) {
-		// do not add an edge between the vertices if either one is null
+		// do not add an edge if either vertex is null
 		if (vertex1 == null || vertex2 == null) {
 			return;
 		}
-		// keep a reference to the starting vertex (where the edge comes from) and the
-		// ending vertex
-		// (where the edge goes to)
-		GraphNode<String> startVertex = null;
-		GraphNode<String> endVertex = null;
-		// if vertex1 does not exist, create it in the graph
+		GraphNode<String> vertexA = null;
+		GraphNode<String> vertexB = null;
+		// if vertexA does not exist, create it in the graph
 		if (!this.getAllVertices().contains(vertex1)) {
 			this.addVertex(vertex1);
 		}
-		// if vertex2 does not exist, create it in the graph
+		// if vertexB does not exist, create it in the graph
 		if (!this.getAllVertices().contains(vertex2)) {
 			this.addVertex(vertex2);
 		}
-		// set the startVertex and endVertex references
+		// find vertex1 and vertex2 in the graph
 		for (GraphNode<String> node : vertexList) {
 			if (node.data.equals(vertex1)) {
-				startVertex = node;
+				vertexA = node;
 			}
 			if (node.data.equals(vertex2)) {
-				endVertex = node;
+				vertexB = node;
 			}
 		}
-		// if the startVertex does not already contain an edge pointing to the
-		// endVertex, add the edge
-		// and increase the size of the graph
-		if (!startVertex.adjacencyList.contains(endVertex)) {
-			startVertex.adjacencyList.add(endVertex);
-			endVertex.adjacencyList.add(startVertex);
+		// add the edge to the graph and increase the size
+		if (!vertexA.adjacencyList.contains(vertexB)) {
+			vertexA.adjacencyList.add(vertexB);
+			vertexB.adjacencyList.add(vertexA);
 			this.size++;
 		}
 	}
@@ -178,26 +159,26 @@ public class Graph {
 	 * the edge does not exist between these vertices.
 	 */
 	public void removeEdge(String vertex1, String vertex2) {
-		// get references to both vertices
-		GraphNode<String> firstVertex = this.getVertexFromString(vertex1);
-		GraphNode<String> secondVertex = this.getVertexFromString(vertex2);
+		// get both vertices from the graph
+		GraphNode<String> vertexA = this.getVertexFromString(vertex1);
+		GraphNode<String> vertexB = this.getVertexFromString(vertex2);
 		// only remove the edge and decrease the size if the two vertices exist in the
-		// graph and an edge exists from vertex1 to vertex2.
-		if (firstVertex != null && firstVertex.adjacencyList.contains(secondVertex)) {
-			firstVertex.adjacencyList.remove(secondVertex);
-			secondVertex.adjacencyList.remove(firstVertex);
+		// graph and an edge exists between the edges.
+		if (vertexA != null && vertexB != null && vertexA.adjacencyList.contains(vertexB)) {
+			vertexA.adjacencyList.remove(vertexB);
+			vertexB.adjacencyList.remove(vertexA);
 			this.size--;
 		}
 	}
 
 	/**
-	 * Returns a list that contains all the vertices
+	 * Returns a list of the vertices
 	 * 
-	 * @return an ArrayList containing all the vertices in the graph
+	 * @return an ArrayList of all the vertices
 	 */
 	public List<String> getAllVertices() {
-		// store all the vertices in the graph in an ArrayList
-		List<String> vertices = new ArrayList<String>();
+		ArrayList<String> vertices = new ArrayList<String>();
+		// store all the vertices in the graph in a HashSet
 		for (GraphNode<String> node : vertexList) {
 			vertices.add(node.data);
 		}
@@ -205,40 +186,33 @@ public class Graph {
 	}
 
 	/**
-	 * Get all the neighbor (adjacent) vertices of a vertex
+	 * Get a list of every adjacent vertex to a given vertex
 	 *
 	 * @param vertex - the vertex to find adjacent vertices of
-	 * @return a list of vertices adjacent to this vertex, null if the vertex is not
-	 *         in the graph
+	 * @return a list of all vertices adjacent to this vertex, null if the vertex is not
+	 *         present in the graph.
 	 */
 	public List<String> getAdjacentVerticesOf(String vertex) {
-		// store an array of vertices adjacent to this one
-		List<String> adjacentVertices = new ArrayList<String>();
-		// store a reference to the vertex to get adjacent vertices of
-		GraphNode<String> vertexMatch = null;
-		// find the matching vertex in the graph by checking all the graph's vertices
-		for (GraphNode<String> node : vertexList) {
-			if (node.data.equals(vertex)) {
-				vertexMatch = node;
-				break;
-			}
-		}
-		// if the matching vertex was found, construct and return the list of adjacent
-		// vertices
+		// store an array of adjacent vertices
+		List<String> adjacent = new ArrayList<String>();
+		// find the vertex in the graph by checking all the graph's vertices
+		GraphNode<String> vertexMatch = this.getVertexFromString(vertex);
+		
+		// construct and return the list of adjacent vertices
 		if (vertexMatch != null) {
 			for (GraphNode<String> node : vertexMatch.adjacencyList) {
-				adjacentVertices.add(node.data);
+				adjacent.add(node.data);
 			}
-			return adjacentVertices;
+			return adjacent;
 		}
-		// if the vertex is not in the graph, return null
+		// if the vertex is not found, return null
 		return null;
 	}
 
 	/**
-	 * Returns the number of edges in this graph.
+	 * Returns the number of edges in the graph.
 	 * 
-	 * @return the size of this graph (the number of edges).
+	 * @return the number of edges in the graph.
 	 */
 	public int size() {
 		return this.size;
@@ -247,7 +221,7 @@ public class Graph {
 	/**
 	 * Returns the number of vertices in this graph.
 	 * 
-	 * @return the order of this graph (the number of vertices).
+	 * @return the number of vertices in the graph.
 	 */
 	public int order() {
 		return this.order;

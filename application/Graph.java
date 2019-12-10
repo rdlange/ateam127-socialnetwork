@@ -191,14 +191,13 @@ public class Graph {
 	}
 
 	/**
-	 * Returns a Set that contains all the vertices
+	 * Returns a list that contains all the vertices
 	 * 
-	 * @return a HashSet containing all the vertices in the graph
+	 * @return an ArrayList containing all the vertices in the graph
 	 */
 	public List<String> getAllVertices() {
+		// store all the vertices in the graph in an ArrayList
 		List<String> vertices = new ArrayList<String>();
-		// store all the vertices in the graph in a HashSet (HashSet is chosen for time
-		// efficiency)
 		for (GraphNode<String> node : vertexList) {
 			vertices.add(node.data);
 		}

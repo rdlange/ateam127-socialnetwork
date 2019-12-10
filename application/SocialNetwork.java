@@ -1,12 +1,16 @@
-  
 /**
- * a social network of users from a file and constructs a Graph object according to the file. 
+ * A social network of users from a file and constructs a Graph object according to the file. 
  * Keeps track of the user in the current ‘center’ of the graph in addition to friends to the 
  * central user.
  * 
- * @authors Robert Lange, Lukas Her, Kevin Xiao, Yu Long, Joe Hershey
- *
+ * Filename: SocialNetwork.java
+ * Project: A-Team project (Social Network)
+ * Authors: Robert Lange, Yu Long, Joe Hershey, Kevin Xiao, Lukas Her
+ * Email: rdlange2@wisc.edu, long27@wisc.edu, joehershey@wisc.edu, klxiao@wisc.edu, lnher2@wisc.edu
+ * Lecture: 001
+ * Due: December 11th, 2019 (11:59pm) 
  */
+
 package application;
 
 import java.io.FileWriter;
@@ -14,21 +18,28 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+* The SocialNetwork class stores the social network used by the NetworkGraph class. It makes use of
+* a Graph object to store the current users and friendships in the social network and implements
+* additional functionality (such as finding mutual friends between two users, describing the shortest
+* path between two users, or counting the number of connected components in the graph).
+*/
 public class SocialNetwork { 
-    
+	
     private Graph graph;//a graph used to keep track of the users
     private ArrayList<String> log;//an array list used to keep track of the user's inputs
     
     /**
-     * Constructor for SocialNetwork class
+     * Constructor for a SocialNetwork object.
      */
     public SocialNetwork() {
-        graph = new Graph();
-        log = new ArrayList<String>();
+        this.graph = new Graph();
+        this.log = new ArrayList<String>();
     }
     
     /**
-     * Returns a list of friends of the given user
+     * Returns a list of friends of the given user.
+     *
      * @param name the name of the person they want to get the friends of
      * @return an array list of the names of the person's friends
      */
@@ -37,7 +48,8 @@ public class SocialNetwork {
     }
     
     /**
-     * Returns a list of all the users in this SocialNetwork
+     * Returns a list of all the users in this SocialNetwork.
+     *
      * @return an array list of all users in the social network
      */
     public List<String> getAllUsers() {
@@ -45,8 +57,9 @@ public class SocialNetwork {
     }
     
     /**
-     * Adds a user to the SocialNetwork with the name given by person.
-     * @param person the person to add to the social network
+     * Adds a user to the SocialNetwork with the name given by the String person.
+     *
+     * @param person - the name of the person to add to the social network
      */
     public void addPerson(String person) {
        this.graph.addVertex(person);
@@ -55,7 +68,8 @@ public class SocialNetwork {
     
     /**
      * Creates a friendship between person1 and person2 in the SocialNetwork. If either person does
-     * not exist in the SocialNetwork, then those users will be added to the network.
+     * not exist in the SocialNetwork, then the user(s) will be added to the network.
+     *
      * @param person1 the new friend of person2
      * @param person2 the new friend of person1
      */
@@ -66,6 +80,7 @@ public class SocialNetwork {
     
     /**
      * Removes the given person from the social network.
+     *
      * @param person the person to remove
      */
     public void removePerson(String person) {
@@ -75,6 +90,7 @@ public class SocialNetwork {
     
     /**
      * Removes the friendship between person1 and person2.
+     *
      * @param person1 the person who used to be friends with person2
      * @param person2 the person who used to be friends with person1
      */
@@ -84,7 +100,7 @@ public class SocialNetwork {
     }
     
     /**
-     * Removes all people from the social network.
+     * Removes all users from the social network.
      */
     public void removeAll() {
         for (String user : graph.getAllVertices()) {
@@ -95,6 +111,7 @@ public class SocialNetwork {
     
     /**
      * Returns a list of all mutual (shared friends) between two friends in the graph.
+     *
      * @param person1 the first person to find the friends of
      * @param person2 the second person to find the friends of
      * @return an array list of all of the friends person1 and person2 share
@@ -116,12 +133,13 @@ public class SocialNetwork {
     /**
      * Returns an ordered list containing shortest path of users from person1 to person2 in the 
      * graph.
+     *
      * @param person1 the starting person
      * @param person2 the ending person
      * @return an ordered list of how to get from person1 to person2
      */
     public List<String> getShortestPath(String person1, String person2) {
-        
+	// TODO: IMPLEMENT ALGORITHM HERE (Dijikstra's?)
         return null;
     }
     
@@ -146,6 +164,7 @@ public class SocialNetwork {
     
     /**
      * Loads the log file found on the given filePath and builds a SocialNetwork from this file.
+     *
      * @param file a relative path to the file they want to read
      * @throws IOException 
      * @throws IOException 
@@ -187,7 +206,8 @@ public class SocialNetwork {
     }
     
     /**
-     * 
+     * Sets a new central user in this social network.
+     *
      * @param central user to set as central user
      */
     public void setCentral(String central){
@@ -195,10 +215,22 @@ public class SocialNetwork {
     }
     
     /**
-     * 
-     * @return
+     * Returns the number of connected components in this social network.
+     *
+     * @return the number of connected components in this graph
      */
     public int connectedComponent(){
+	// TODO: General idea: For each user in the social network,
+	// 1. mark the user as visited
+	// 2. look for unvisited friends
+	// 3. recursively call helper method on those friends
+	// 4a. repeat until no more users in this component are unvisited. 
+	// 4b. add 1 to the number of connected components.
+	// 5a. check the next user in the graph 
+	// 5b. if they are visited, go to the next user.
+	// 5c. otherwise, check the connected component that this user is a part of for other users
+	// 6. repeat this process until every user in the graph has been checked.
+	// 7. return the total number of connected components
         return 0;
     }
     

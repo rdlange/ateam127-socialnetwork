@@ -283,6 +283,9 @@ public class Main extends Application {
 	primaryStage.show();
   }
   
+	/*
+	* Private helper method used to set a new central user in the graph.
+	*/
   private void setCenter() { 
       TextInputDialog dialog = new TextInputDialog();
       dialog.setTitle("Set Center User");
@@ -297,7 +300,9 @@ public class Main extends Application {
       }
   }
   
-  
+	/*
+	* Private helper method used to add a user to the graph
+	*/
   private void addUser() { 
       TextInputDialog dialog = new TextInputDialog();
       dialog.setTitle("Add User");
@@ -311,7 +316,10 @@ public class Main extends Application {
     	  socialNetwork.addPerson(result.get());
       }
   }
-  
+	
+  	/*
+	* Private helper method used to remove a user from the graph.
+	*/
   private void removeUser() { 
       TextInputDialog dialog = new TextInputDialog();
       dialog.setTitle("Remove User");
@@ -326,6 +334,9 @@ public class Main extends Application {
       }
   }
   
+	/*
+	* Private helper method used to add a friendship to the graph.
+	*/
 	private void addFriend() {
 		// Create the custom dialog.
 	    Dialog<Pair<String, String>> dialog = new Dialog<>();
@@ -375,7 +386,9 @@ public class Main extends Application {
 	    });
 	}
 	
-
+	/*
+	* Private helper method used to remove a friendship from the graph.
+	*/
 	private void removeFriend() {
 		// Create the custom dialog.
 	    Dialog<Pair<String, String>> dialog = new Dialog<>();
@@ -425,6 +438,9 @@ public class Main extends Application {
 	    });
 	}
 	
+	/*
+	* Private helper method used to display a warning when the user clicks the 'Clear All' button.
+	*/
 	private void clearAll() {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Clear All");
@@ -436,10 +452,13 @@ public class Main extends Application {
 		}
 	}
 	
+	/*
+	* Private helper method used to display the updates (changes) to the graph.
+	*/
 	private void updates() {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Status Updates");
-		alert.setHeaderText("Here is a list of changes you have made");
+		alert.setHeaderText("Here is a list of changes you have made:");
 		ArrayList<String> result = socialNetwork.getLog();
 		String s = "";
 		for (int i = 0; i < result.size(); i++) {
@@ -452,13 +471,16 @@ public class Main extends Application {
 		alert.showAndWait();
 	}
 	
+	/*
+	* Private helper method used to display a warning when the user clicks the 'Exit' button.
+	*/
 	private void close() {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Exit");
 		alert.setHeaderText(null);
-		alert.setContentText("Are you sure to exit?");
+		alert.setContentText("Are you sure you want to exit?");
 		ButtonType saveButton = new ButtonType("Save");
-		ButtonType exitButton = new ButtonType("Exit without save");
+		ButtonType exitButton = new ButtonType("Exit without saving");
 		ButtonType cancelButton = new ButtonType("Cancel");
 		alert.getButtonTypes().setAll(saveButton,exitButton,cancelButton);
 		Optional<ButtonType> result = alert.showAndWait();
@@ -469,11 +491,14 @@ public class Main extends Application {
 		}
 	}
 	
+	/*
+	* Private helper method used to confirm exiting without saving.
+	*/
 	private void confirmExit() {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("Exit without save");
+		alert.setTitle("Exit without saving");
 		alert.setHeaderText(null);
-		alert.setContentText("Are you sure to exit without save?");
+		alert.setContentText("Are you sure you want to exit without saving?");
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK){
 		    goodbye();
@@ -483,11 +508,14 @@ public class Main extends Application {
 		}
 	}
 	
+	/*
+	* Private helper method used to confirm saving a file.
+	*/
 	private void confirmSave() {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Save");
 		alert.setHeaderText(null);
-		alert.setContentText("Are you sure to save and exit?");
+		alert.setContentText("Are you sure you want to save and exit?");
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK){
 		    save();
@@ -497,6 +525,9 @@ public class Main extends Application {
 		}
 	}
 	
+	/*
+	* Private helper method used to save the current graph to a text file.
+	*/
 	private void save() {
 		TextInputDialog dialog = new TextInputDialog();
 		dialog.setTitle("Save");
@@ -535,14 +566,20 @@ public class Main extends Application {
 		}
 	}
 	
+	/*
+	* Private helper method used to display a warning when accessing the file fails.
+	*/
 	private void failedEx() {
 		Alert alert = new Alert(AlertType.WARNING);
 		alert.setTitle("Failed");
 		alert.setHeaderText(null);
-		alert.setContentText("Failed during accesing file. Please try again");
+		alert.setContentText("Failed during accessing file. Please try again");
 		alert.showAndWait();
 	}
 	
+	/*
+	* Private helper method used to display a warning when the loaded file has invalid input.
+	*/
 	private void mistake() {
 		Alert alert = new Alert(AlertType.WARNING);
 		alert.setTitle("Error");
@@ -551,6 +588,9 @@ public class Main extends Application {
 		alert.showAndWait();
 	}
 	
+	/*
+	* Private helper method used to display a warning that the file couldn't be saved.
+	*/
 	private void failed() {
 		Alert alert = new Alert(AlertType.WARNING);
 		alert.setTitle("Failed");
@@ -560,6 +600,9 @@ public class Main extends Application {
 		save();
 	}
 	
+	/*
+	* Private helper method used to display a 'Goodbye' message to the user (after saving).
+	*/
 	private void saved() {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Goodbye");
@@ -569,6 +612,9 @@ public class Main extends Application {
 		Platform.exit();
 	}
 	
+	/*
+	* Private helper method used to display a 'Goodbye' message to the user (no saving).
+	*/
 	private void goodbye() {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Goodbye");
@@ -578,6 +624,9 @@ public class Main extends Application {
 		Platform.exit();
 	}
 	
+	/*
+	* Private helper method used to find the mutual friends between two users in the graph.
+	*/
 	private void mutualFriend() {
 		// Create the custom dialog.
 	    Dialog<Pair<String, String>> dialog = new Dialog<>();
@@ -627,6 +676,9 @@ public class Main extends Application {
 	    });
 	}
 	
+	/*
+	* Private helper method used to display the mutual friends between two users in the graph.
+	*/
 	private void mutualResult(String user1, String user2) {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Mutual Friends");
@@ -636,6 +688,9 @@ public class Main extends Application {
 		alert.showAndWait();
 	}
 	
+	/*
+	* Private helper method used to find the shortest path between two users in the graph.
+	*/
 	private void shortestPath() {
 		// Create the custom dialog.
 	    Dialog<Pair<String, String>> dialog = new Dialog<>();
@@ -685,6 +740,9 @@ public class Main extends Application {
 	    });
 	}
 	
+	/*
+	* Private helper method used to display the shortest path between two nodes in the graph.
+	*/
 	private void shortestResult(String user1, String user2) {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Shortest Path");
@@ -694,6 +752,9 @@ public class Main extends Application {
 		alert.showAndWait();
 	}
 	
+	/*
+	* Private helper method used to display the number of connected components in the graph.
+	*/
 	private void connected() {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Connected Components");
@@ -703,6 +764,9 @@ public class Main extends Application {
 		alert.showAndWait();
 	}
 	
+	/*
+	* Private helper method used to display a warning popup when the provided input is invalid.
+	*/
 	private void invalid() {
 		Alert alert = new Alert(AlertType.WARNING);
 		alert.setTitle("Invalid input");
@@ -711,8 +775,6 @@ public class Main extends Application {
 
 		alert.showAndWait();
 	}
-	
-	// validation check
 	
   /**
    * @param args

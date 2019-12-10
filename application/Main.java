@@ -782,7 +782,7 @@ public class Main extends Application {
 		Alert alert = new Alert(AlertType.WARNING);
 		alert.setTitle("Invalid input");
 		alert.setHeaderText(null);
-		alert.setContentText("Invalid input. Please try again.");
+		alert.setContentText("Invalid input or duplicate key. Please try again.");
 
 		alert.showAndWait();
 	}

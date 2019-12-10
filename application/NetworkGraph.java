@@ -1,3 +1,4 @@
+
 package application;
 
 import java.util.ArrayList;
@@ -11,19 +12,14 @@ import javafx.scene.text.Text;
 
 public class NetworkGraph {
 	
-	//private SocialNetwork network;
+	private SocialNetwork network; //SocialNetwork object used to access its users and methods
 	private String centralUser;
 	
-	//network = new SocialNetwork(); 
 	
-	/*public NetworkGraph(String centralUser, SocialNetwork network) {
+	
+	public NetworkGraph(String centralUser, SocialNetwork network) {
 		this.network = network;
 		this.centralUser = centralUser;
-	}*/
-
-	public NetworkGraph() {
-		//this.network = null;
-		this.centralUser = "user1";
 	}
 
 	public String getCentralUser() {
@@ -32,13 +28,10 @@ public class NetworkGraph {
 
 	public VBox visualizeGraph() {
 		
-		//commented out as the SocialNetwork class isn¡¯t established yet
-		//ArrayList <String> friends = network.getFriendsOf(centralUser);
+		//ArrayList of all the Central User's friends
+		ArrayList <String> friends = network.getFriendsOf(centralUser);
 		
-		//hardcoded so friends can be present without the network
-		ArrayList <String> friends = new ArrayList <String>();
-		friends.add("friend1");
-		friends.add("friend2");
+		
 		
 		VBox vbox = new VBox();
 		vbox.setPadding(new Insets(10));
@@ -58,16 +51,46 @@ public class NetworkGraph {
     		}
 		return vbox;
     	}
+
+	public String mutualFriendsText (String user1, String user2) {
+		String mutuals = “Here are the mutual friends of “ + user1 + “ and “ +        user2 + “: ”;
+		ArrayList <String> mutualFriends = network.getMutualFriends(user1,user2);
+		for (int i = 0; i < mutualFriends.size(); i++) {
+			if ( i == mutualFriends.size() - 1) {
+				return mutuals + mutualFriends.get(i) + “.”;
+			}
+			mutuals = mutuals + mutualFriends.get(i) + “, “;
 	
-	
-	public String getMutualFriends(String user1, String user2) {
-		// TODO Auto-generated method stub
-		return null;
+
 	}
 
-	public String getShortestPath(String user1, String user2) {
-		// TODO Auto-generated method stub
-		return null;
-      }
+	
+	public String shortestFriendPath(String user1, String user2) {
+		ArrayList<String> path = network.getShortestPath(user1, user2);
+		String message = “”;
+		if (path.size() == 2) {
+			return new String(“These users are friends, so the shortest path directly connects them!”);
+		}		
+
+
+		for (int i = 0; i < path.size(); i++) {
+	
+			if (i == 0) {
+				message = user1 + “ <-> “;
+			}
+			else if(i == path.size() - 1) {
+				message = message + user2;
+			}
+			else {
+				message = message + path.get(i) + “ <-> “;
+			}
+		}
+	}
+     
+}
+
+
+	
+
 
 

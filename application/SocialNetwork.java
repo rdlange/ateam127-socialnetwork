@@ -127,25 +127,63 @@ public class SocialNetwork {
     
     /**
      * Saves the log of this SocialNetwork to a text file.
+     * @param file 
+     * @throws IOException 
      */
-    public void saveNetwork() {
-        try {
-            FileWriter writer = new FileWriter("network.txt");
-            for (String str: log) {
-                writer.write(str + "\n");
-            }
-                writer.close();
-            } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void saveNetwork(File file) throws IOException {
+    	FileWriter toWrite = new FileWriter(file, true);
+		try {
+			for (int i = 0; i < log.size(); i++){
+				System.out.println(log.get(i));
+	    		toWrite.write(log.get(i) + "\n");
+	    	}
+	    	toWrite.close();
+		}catch(Exception e) {
+			toWrite.close();
+			throw new IOException();
+		}
     }
     
     /**
      * Loads the log file found on the given filePath and builds a SocialNetwork from this file.
-     * @param filePath a relative path to the file they want to read
+     * @param file a relative path to the file they want to read
+     * @throws IOException 
+     * @throws IOException 
      */
-    public void uploadNetwork(String filePath) {
-        
+    public void uploadNetwork(File file) throws IllegalArgumentException, IOException {
+    	Scanner sc = new Scanner(file);
+    	while (sc.hasNextLine()) {
+    		String command = sc.nextLine();
+    		String[] part = command.split("\\s+");
+    		if (part[0].equals("s")) {
+    			setCentral(command.substring(2));
+    		}
+    		else if (part[0].equals("a")) {
+    			if (part.length == 2) {
+    				addPerson(part[1]);
+    			}
+    			else if (part.length == 3) {
+    				addFriends(part[1], part[2]);
+    			}
+    			else {
+    				throw new IllegalArgumentException();
+    			}
+    		}
+    		else if (part[0].equals("r")) {
+    			if (part.length == 2) {
+    				removePerson(part[1]);
+    			}
+    			else if (part.length == 3) {
+    				removeFriend(part[1], part[2]);
+    			}
+    			else {
+    				throw new IllegalArgumentException();
+    			}
+    		}
+    		else {
+    			throw new IllegalArgumentException();
+    		}
+    	}
     }
     
     /**

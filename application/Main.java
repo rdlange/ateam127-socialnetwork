@@ -62,7 +62,8 @@ public class Main extends Application {
 	private static final int WINDOW_HEIGHT = 640;
 	private static final String APP_TITLE = "GetSocial - Social Network Visaulizer";
 	private SocialNetwork socialNetwork = new SocialNetwork();
-	private NetworkGraph graph = new NetworkGraph();
+	private NetworkGraph graph = new NetworkGraph("", socialNetwork);
+	BorderPane root = new BorderPane();
 
 	/*
 	 * Method used to create the GUI buttons and place them onto the stage. After
@@ -87,6 +88,16 @@ public class Main extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				setCenter();
+				VBox leftBox = new VBox();
+				leftBox.setSpacing(160.0);
+				leftBox.getChildren().add(new Label(""));
+				leftBox.getChildren().add(new Button(graph.getCentralUser()));
+				root.setLeft(leftBox);
+				VBox center = new VBox();
+				center.setSpacing(160.0);
+				center.getChildren().add(new Label(""));
+				center.getChildren().add(new VBox(graph.visualizeGraph()));
+				root.setCenter(center);
 			}
 		});
 
@@ -97,6 +108,16 @@ public class Main extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				addUser();
+				VBox leftBox = new VBox();
+				leftBox.setSpacing(160.0);
+				leftBox.getChildren().add(new Label(""));
+				leftBox.getChildren().add(new Button(graph.getCentralUser()));
+				root.setLeft(leftBox);
+				VBox center = new VBox();
+				center.setSpacing(160.0);
+				center.getChildren().add(new Label(""));
+				center.getChildren().add(new VBox(graph.visualizeGraph()));
+				root.setCenter(center);
 			}
 		});
 
@@ -107,6 +128,11 @@ public class Main extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				removeUser();
+				VBox center = new VBox();
+				center.setSpacing(160.0);
+				center.getChildren().add(new Label(""));
+				center.getChildren().add(new VBox(graph.visualizeGraph()));
+				root.setCenter(center);
 			}
 		});
 
@@ -117,6 +143,16 @@ public class Main extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				addFriend();
+				VBox leftBox = new VBox();
+				leftBox.setSpacing(160.0);
+				leftBox.getChildren().add(new Label(""));
+				leftBox.getChildren().add(new Button(graph.getCentralUser()));
+				root.setLeft(leftBox);
+				VBox center = new VBox();
+				center.setSpacing(160.0);
+				center.getChildren().add(new Label(""));
+				center.getChildren().add(new VBox(graph.visualizeGraph()));
+				root.setCenter(center);
 			}
 		});
 
@@ -127,6 +163,11 @@ public class Main extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				removeFriend();
+				VBox center = new VBox();
+				center.setSpacing(160.0);
+				center.getChildren().add(new Label(""));
+				center.getChildren().add(new VBox(graph.visualizeGraph()));
+				root.setCenter(center);
 			}
 		});
 
@@ -174,6 +215,16 @@ public class Main extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				clearAll();
+				VBox leftBox = new VBox();
+				leftBox.setSpacing(160.0);
+				leftBox.getChildren().add(new Label(""));
+				leftBox.getChildren().add(new Button(graph.getCentralUser()));
+				root.setLeft(leftBox);
+				VBox center = new VBox();
+				center.setSpacing(160.0);
+				center.getChildren().add(new Label(""));
+				center.getChildren().add(new VBox(graph.visualizeGraph()));
+				root.setCenter(center);
 			}
 		});
 
@@ -227,7 +278,7 @@ public class Main extends Application {
 		connectedComponentButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				connected();
+				statistics();
 			}
 		});
 
@@ -254,7 +305,7 @@ public class Main extends Application {
 		algorithmOptions.getChildren().add(closeButton);
 
 		// Main layout is Border Pane example (top,left,center,right,bottom)
-		BorderPane root = new BorderPane();
+		//BorderPane root = new BorderPane();
 		root.setPadding(new Insets(10));
 		Button centralUserButton = new Button(graph.getCentralUser());
 		centralUserButton.setMinHeight(100);
@@ -690,7 +741,7 @@ public class Main extends Application {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Mutual Friends");
 		alert.setHeaderText("There is a list of mutual frinds between " + user1 + "and " + user2 + ":");
-		String result = graph.getMutualFriends(user1, user2);
+		String result = graph.mutualFriendsText(user1, user2);
 		alert.setContentText(result);
 		alert.showAndWait();
 	}
@@ -755,22 +806,28 @@ public class Main extends Application {
 	private void shortestResult(String user1, String user2) {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Shortest Path");
-		alert.setHeaderText("The shortest path between " + user1 + "and " + user2 + "is:");
-		String result = graph.getShortestPath(user1, user2);
+		alert.setHeaderText("The shortest path between " + user1 + " and " + user2 + " is:");
+		String result = graph.shortestFriendPath(user1, user2);
+		if (result == "") {
+			result = user1 + " and " + user2 + " are not connected";
+		}
 		alert.setContentText(result);
 		alert.showAndWait();
 	}
 
 	/*
-	 * Private helper method used to display the number of connected components in
-	 * the graph.
+	 * Private helper method used to display the statistics of the graph.
 	 */
-	private void connected() {
+	private void statistics() {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Connected Components");
 		alert.setHeaderText("The number of connected components is:");
+		alert.setTitle("Social Network Statistics");
+		alert.setHeaderText("Here are some statistics for you graph");
 		int result = socialNetwork.connectedComponent();
 		alert.setContentText(String.valueOf(result));
+		alert.setContentText("The number of connected components is: " + String.valueOf(result) + "\n"
+				+ "The number of users in this graph is: " + String.valueOf(socialNetwork.numOfVertices()) + "\n" + "The number of friendships in this graph is: " + String.valueOf(socialNetwork.numOfEdges()));
 		alert.showAndWait();
 	}
 
@@ -782,7 +839,7 @@ public class Main extends Application {
 		Alert alert = new Alert(AlertType.WARNING);
 		alert.setTitle("Invalid input");
 		alert.setHeaderText(null);
-		alert.setContentText("Invalid input or duplicate key. Please try again.");
+		alert.setContentText("Invalid input. Please try again.");
 
 		alert.showAndWait();
 	}

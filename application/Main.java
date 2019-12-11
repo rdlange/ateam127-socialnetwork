@@ -766,15 +766,15 @@ public class Main extends Application {
 	}
 
 	/*
-	 * Private helper method used to display the number of connected components in
-	 * the graph.
+	 * Private helper method used to display the statistics of the graph.
 	 */
-	private void connected() {
+	private void statistics() {
 		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("Connected Components");
-		alert.setHeaderText("The number of connected components is:");
+		alert.setTitle("Social Network Statistics");
+		alert.setHeaderText("Here are some statistics for you graph");
 		int result = socialNetwork.connectedComponent();
-		alert.setContentText(String.valueOf(result));
+		alert.setContentText("The number of connected components is: " + String.valueOf(result) + "\n"
+				+ "The number of users in this graph is: " + String.valueOf(socialNetwork.numOfVertices()) + "\n" + "The number of friendships in this graph is: " + String.valueOf(socialNetwork.numOfEdges()));
 		alert.showAndWait();
 	}
 

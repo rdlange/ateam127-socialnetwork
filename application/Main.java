@@ -196,6 +196,9 @@ public class Main extends Application {
 		Button importNetworkButton = new Button("Import Network");
 		importNetworkButton.setMinSize(150, 50);
 		final FileChooser fileChooser = new FileChooser();
+		FileChooser.ExtensionFilter extFilter = 
+                new FileChooser.ExtensionFilter("TEXT files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extFilter);
 		importNetworkButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent e) {
@@ -479,7 +482,11 @@ public class Main extends Application {
 				removeC();
 			}
 			else {
-				socialNetwork.removePerson(result.get());
+				try {
+					socialNetwork.removePerson(result.get());
+				}catch(IllegalArgumentException e) {
+					removeAbsent();
+				}
 			}
 		}
 	}
@@ -581,7 +588,11 @@ public class Main extends Application {
 
 		result.ifPresent(pair -> {
 			if (!pair.getKey().isEmpty() && !pair.getValue().isEmpty()) {
-				socialNetwork.removeFriends(pair.getKey(), pair.getValue());
+				try {
+					socialNetwork.removeFriends(pair.getKey(), pair.getValue());
+				}catch(IllegalArgumentException e) {
+					removeAbsent();
+				}
 			} else {
 				invalid();
 			}
@@ -831,11 +842,11 @@ public class Main extends Application {
 	}
 	
 	/*
-    	 * Returns a list of mutual friends between the two specified users as a String.
-     	 *	 
-     	 * @param user1 - First user specified
-     	 * @param user2 - Second user specified
-     	 */
+	 * Returns a list of mutual friends between the two specified users as a String.
+ 	 *	 
+ 	 * @param user1 - First user specified
+ 	 * @param user2 - Second user specified
+ 	 */
 	public String mutualFriendsText(String user1, String user2) {
 		String mutuals = "Here are the mutual friends of " + user1 + " and " + user2 + ": ";
 		List<String> mutualFriends = socialNetwork.getMutualFriends(user1, user2);
@@ -849,13 +860,13 @@ public class Main extends Application {
 		}
 		return user1 + " and " + user2 + " have no mutual friends.";
 	}
-	
+
 	/*
-    	 * Returns the shortest path between the two specified users as a String.
-    	 * 
-      	 * @param user1 - First user specified
-     	 * @param user2 - Second user specified
-         */
+	 * Returns the shortest path between the two specified users as a String.
+	 * 
+  	 * @param user1 - First user specified
+ 	 * @param user2 - Second user specified
+     */
 	public String shortestFriendPath(String user1, String user2) {
 		List<String> path = new ArrayList<String>();
 		path = socialNetwork.getShortestPath(user1, user2);
@@ -989,14 +1000,27 @@ public class Main extends Application {
 	}
 	
 	/*
-     	 * Private helper method used to display a warning popup when the user tries to remove
-     	 * the central user.
-     	 */
+ 	 * Private helper method used to display a warning popup when the user tries to remove
+ 	 * the central user.
+ 	 */
 	private void removeC() {
 		Alert alert = new Alert(AlertType.WARNING);
 		alert.setTitle("Invalid input");
 		alert.setHeaderText(null);
 		alert.setContentText("Cannot remove central user");
+
+		alert.showAndWait();
+	}
+	
+	/*
+ 	 * Private helper method used to display a warning popup when the user tries to remove
+ 	 * an absent user or friendship
+ 	 */
+	private void removeAbsent() {
+		Alert alert = new Alert(AlertType.WARNING);
+		alert.setTitle("Invalid input");
+		alert.setHeaderText(null);
+		alert.setContentText("Cannot remove item that is not existing in the network");
 
 		alert.showAndWait();
 	}

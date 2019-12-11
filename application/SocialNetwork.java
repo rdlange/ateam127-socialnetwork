@@ -67,7 +67,7 @@ public class SocialNetwork {
 	public void addPerson(String person) {
 		List<String> result = getAllUsers();
 		if (result.size() == 0) {
-			setCentral(person);
+			defaultSetCentral(person);
 		}
 		this.graph.addVertex(person);
 		log.add("a " + person);
@@ -84,7 +84,7 @@ public class SocialNetwork {
 	public void addFriends(String person1, String person2) {
 		List<String> result = getAllUsers();
 		if (result.size() == 0) {
-			setCentral(person1);
+			defaultSetCentral(person1);
 		}
 		this.graph.addEdge(person1, person2);
 		log.add("a " + person1 + " " + person2);
@@ -96,6 +96,16 @@ public class SocialNetwork {
 	 * @param person the person to remove
 	 */
 	public void removePerson(String person) {
+		List<String> list = getAllUsers();
+		Boolean flag = false;
+ 		for (int i = 0; i < list.size(); i++) {
+ 			if (person.equals(list.get(i))) {
+ 				flag = true;
+ 			}
+ 		}
+		if (flag == false) {
+			throw new IllegalArgumentException();
+		}
 		this.graph.removeVertex(person);
 		log.add("r " + person);
 	}
@@ -107,8 +117,23 @@ public class SocialNetwork {
 	 * @param person2 the person who used to be friends with person1
 	 */
 	public void removeFriends(String person1, String person2) {
-		this.graph.removeEdge(person1, person2);
-		log.add("r " + person1 + " " + person2);
+		List<String> list = graph.getAdjacentVerticesOf(person1);
+		Boolean flag = false;
+		if (list != null) {
+			for (int i = 0; i < list.size(); i++) {
+				if (person2.equals(list.get(i))) {
+					flag = true;
+				}
+			}
+			if (flag == false) {
+				throw new IllegalArgumentException();
+			}
+			this.graph.removeEdge(person1, person2);
+			log.add("r " + person1 + " " + person2);
+		}
+		else {
+			throw new IllegalArgumentException();
+		}
 	}
 
 	/**
@@ -228,6 +253,13 @@ public class SocialNetwork {
 		centralUser = central;
 		log.add("s " + centralUser);
 	}
+	
+	public void defaultSetCentral(String central) {
+		graph.addVertex(central);
+		centralUser = central;
+	}
+
+	
 	/**
 	 * Returns the number of connected components in this social network.
 	 *

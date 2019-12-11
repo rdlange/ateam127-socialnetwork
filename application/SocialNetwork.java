@@ -17,8 +17,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Scanner;
+import java.util.Stack;
 
 /*
 * The SocialNetwork class stores the social network used by the NetworkGraph class. It makes use of
@@ -58,7 +61,7 @@ public class SocialNetwork {
 	public List<String> getAllUsers() {
 		return this.graph.getAllVertices();
 	}
-	
+
 	/**
 	 * Adds a user to the SocialNetwork with the name given by the String person.
 	 *
@@ -67,7 +70,7 @@ public class SocialNetwork {
 	public void addPerson(String person) {
 		List<String> result = getAllUsers();
 		if (result.size() == 0) {
-			defaultSetCentral(person);
+			setCentral(person);
 		}
 		this.graph.addVertex(person);
 		log.add("a " + person);
@@ -84,7 +87,7 @@ public class SocialNetwork {
 	public void addFriends(String person1, String person2) {
 		List<String> result = getAllUsers();
 		if (result.size() == 0) {
-			defaultSetCentral(person1);
+			setCentral(person1);
 		}
 		this.graph.addEdge(person1, person2);
 		log.add("a " + person1 + " " + person2);
@@ -96,16 +99,6 @@ public class SocialNetwork {
 	 * @param person the person to remove
 	 */
 	public void removePerson(String person) {
-		List<String> list = getAllUsers();
-		Boolean flag = false;
- 		for (int i = 0; i < list.size(); i++) {
- 			if (person.equals(list.get(i))) {
- 				flag = true;
- 			}
- 		}
-		if (flag == false) {
-			throw new IllegalArgumentException();
-		}
 		this.graph.removeVertex(person);
 		log.add("r " + person);
 	}
@@ -117,23 +110,8 @@ public class SocialNetwork {
 	 * @param person2 the person who used to be friends with person1
 	 */
 	public void removeFriends(String person1, String person2) {
-		List<String> list = graph.getAdjacentVerticesOf(person1);
-		Boolean flag = false;
-		if (list != null) {
-			for (int i = 0; i < list.size(); i++) {
-				if (person2.equals(list.get(i))) {
-					flag = true;
-				}
-			}
-			if (flag == false) {
-				throw new IllegalArgumentException();
-			}
-			this.graph.removeEdge(person1, person2);
-			log.add("r " + person1 + " " + person2);
-		}
-		else {
-			throw new IllegalArgumentException();
-		}
+		this.graph.removeEdge(person1, person2);
+		log.add("r " + person1 + " " + person2);
 	}
 
 	/**
@@ -159,12 +137,10 @@ public class SocialNetwork {
 		List<String> user1Friends = graph.getAdjacentVerticesOf(person1);
 		List<String> user2Friends = graph.getAdjacentVerticesOf(person2);
 		List<String> mutualFriends = new ArrayList<String>();
-		if (user1Friends != null && user2Friends !=null) {
-			for (String friendOfUser1 : user1Friends) {
-				for (String friendOfUser2 : user2Friends) {
-					if (friendOfUser1.equals(friendOfUser2)) {
-						mutualFriends.add(friendOfUser1);
-					}
+		for (String friendOfUser1 : user1Friends) {
+			for (String friendOfUser2 : user2Friends) {
+				if (friendOfUser1.equals(friendOfUser2)) {
+					mutualFriends.add(friendOfUser1);
 				}
 			}
 		}
@@ -180,8 +156,49 @@ public class SocialNetwork {
 	 * @return an ordered list of how to get from person1 to person2
 	 */
 	public List<String> getShortestPath(String person1, String person2) {
-		// TODO: IMPLEMENT ALGORITHM HERE (Dijikstra's?)
-		return null;
+		return getShortestPathHelper(person1, person2, new ArrayList<String>());
+	}
+
+	/**
+	 * Private helper method that recursively searches for the user to find in the
+	 * graph starting from a specific user defined in the original method. Uses a
+	 * BFS algorithm to return the shortest path from the initial user to the user
+	 * to find. If the two users are not connected, an empty ArrayList will be
+	 * returned by the method.
+	 * 
+	 * @param currentUser - the user being searched through in this iteration of the
+	 *                    program.
+	 * @param userToFind  - the user to find from the starting user
+	 * @param visited     - the list of users that have already been visited.
+	 * @return the shortest path from the starting user to userToFind in the graph
+	 */
+	private ArrayList<String> getShortestPathHelper(String currentUser, String userToFind, ArrayList<String> visited) {
+		// store the current shortest path in an ArrayList
+		ArrayList<String> shortestPath = new ArrayList<String>();
+		// mark the current user as visited
+		visited.add(currentUser);
+		// if the current user is the user to find, add them to the path and return the path
+		if (currentUser.equals(userToFind)) {
+			shortestPath.add(currentUser);
+			return shortestPath;
+		} 
+		// search through all of currentUser's friends to find the next step in the path
+		for (String friend : graph.getAdjacentVerticesOf(currentUser)) {
+			// if this friend has not been visited yet, make a recursive call of this method on them
+			if (!visited.contains(friend)) {
+				shortestPath = getShortestPathHelper(friend, userToFind, visited);
+			}
+			// if userToFind has already been found, break out of the loop.
+			if (shortestPath.contains(userToFind)) {
+				break;
+			}
+		}
+		// if userToFind was found, add currentUser to the beginning of the path
+		if (shortestPath.contains(userToFind)) {
+			shortestPath.add(0, currentUser);
+		}
+		// return the current shortestPath
+		return shortestPath;
 	}
 
 	/**
@@ -243,27 +260,21 @@ public class SocialNetwork {
 	public String getCentralUser() {
 		return centralUser;
 	}
+
 	/**
 	 * Sets a new central user in this social network.
 	 *
 	 * @param central user to set as central user
 	 */
 	public void setCentral(String central) {
-		graph.addVertex(central);
 		centralUser = central;
 		log.add("s " + centralUser);
 	}
-	
-	public void defaultSetCentral(String central) {
-		graph.addVertex(central);
-		centralUser = central;
-	}
 
-	
 	/**
 	 * Returns the number of connected components in this social network.
 	 *
-	 * @return the number of connected components in this graph
+	 * @return the number of connected components in the social network graph
 	 */
 	public int connectedComponent() {
 		// store the number of components
@@ -293,6 +304,7 @@ public class SocialNetwork {
 	 * Used to ensure that every user in a given component is counted.
 	 * 
 	 * @param currentUser - the current user to visit and check for friends
+	 * 
 	 * @param visited - a list of all the users that have been visited
 	 */
 	private void connectedComponentHelper(String currentUser, ArrayList<String> visited) {

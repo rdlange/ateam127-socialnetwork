@@ -44,6 +44,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -79,7 +82,7 @@ public class Main extends Application {
 		Image logo = new Image("logo.png");
 		ImageView logoView = new ImageView(logo);
 
-		VBox network = graph.visualizeGraph();
+		VBox network = visualizeGraph();
 
 		// create the 'Set Central User' button
 		Button setCenterButton = new Button("Set Central User");
@@ -91,12 +94,12 @@ public class Main extends Application {
 				VBox leftBox = new VBox();
 				leftBox.setSpacing(160.0);
 				leftBox.getChildren().add(new Label(""));
-				leftBox.getChildren().add(new Button(graph.getCentralUser()));
+				leftBox.getChildren().add(new Button(socialNetwork.getCentralUser()));
 				root.setLeft(leftBox);
 				VBox center = new VBox();
 				center.setSpacing(160.0);
 				center.getChildren().add(new Label(""));
-				center.getChildren().add(new VBox(graph.visualizeGraph()));
+				center.getChildren().add(visualizeGraph());
 				root.setCenter(center);
 			}
 		});
@@ -111,12 +114,12 @@ public class Main extends Application {
 				VBox leftBox = new VBox();
 				leftBox.setSpacing(160.0);
 				leftBox.getChildren().add(new Label(""));
-				leftBox.getChildren().add(new Button(graph.getCentralUser()));
+				leftBox.getChildren().add(new Button(socialNetwork.getCentralUser()));
 				root.setLeft(leftBox);
 				VBox center = new VBox();
 				center.setSpacing(160.0);
 				center.getChildren().add(new Label(""));
-				center.getChildren().add(new VBox(graph.visualizeGraph()));
+				center.getChildren().add(new VBox(visualizeGraph()));
 				root.setCenter(center);
 			}
 		});
@@ -131,7 +134,7 @@ public class Main extends Application {
 				VBox center = new VBox();
 				center.setSpacing(160.0);
 				center.getChildren().add(new Label(""));
-				center.getChildren().add(new VBox(graph.visualizeGraph()));
+				center.getChildren().add(new VBox(visualizeGraph()));
 				root.setCenter(center);
 			}
 		});
@@ -146,12 +149,12 @@ public class Main extends Application {
 				VBox leftBox = new VBox();
 				leftBox.setSpacing(160.0);
 				leftBox.getChildren().add(new Label(""));
-				leftBox.getChildren().add(new Button(graph.getCentralUser()));
+				leftBox.getChildren().add(new Button(socialNetwork.getCentralUser()));
 				root.setLeft(leftBox);
 				VBox center = new VBox();
 				center.setSpacing(160.0);
 				center.getChildren().add(new Label(""));
-				center.getChildren().add(new VBox(graph.visualizeGraph()));
+				center.getChildren().add(new VBox(visualizeGraph()));
 				root.setCenter(center);
 			}
 		});
@@ -166,7 +169,7 @@ public class Main extends Application {
 				VBox center = new VBox();
 				center.setSpacing(160.0);
 				center.getChildren().add(new Label(""));
-				center.getChildren().add(new VBox(graph.visualizeGraph()));
+				center.getChildren().add(visualizeGraph());
 				root.setCenter(center);
 			}
 		});
@@ -218,12 +221,13 @@ public class Main extends Application {
 				VBox leftBox = new VBox();
 				leftBox.setSpacing(160.0);
 				leftBox.getChildren().add(new Label(""));
-				leftBox.getChildren().add(new Button(graph.getCentralUser()));
+				leftBox.getChildren().add(new Button(socialNetwork.getCentralUser()));
 				root.setLeft(leftBox);
 				VBox center = new VBox();
 				center.setSpacing(160.0);
 				center.getChildren().add(new Label(""));
-				center.getChildren().add(new VBox(graph.visualizeGraph()));
+				// TODO
+				center.getChildren().add(visualizeGraph());
 				root.setCenter(center);
 			}
 		});
@@ -307,7 +311,7 @@ public class Main extends Application {
 		// Main layout is Border Pane example (top,left,center,right,bottom)
 		//BorderPane root = new BorderPane();
 		root.setPadding(new Insets(10));
-		Button centralUserButton = new Button(graph.getCentralUser());
+		Button centralUserButton = new Button(socialNetwork.getCentralUser());
 		centralUserButton.setMinHeight(100);
 
 		// Use VBoxes for aesthetic spacing purposes on left panel
@@ -335,9 +339,43 @@ public class Main extends Application {
 		primaryStage.setScene(mainScene);
 		primaryStage.show();
 	}
+	
+	/*
+	 * Returns the visual component to be displayed on the GUI defined in main.
+	 *
+	 * @return a vbox containing all the users to be displayed in the visual socialNetwork.
+	 */
+	public VBox visualizeGraph() {
+		if (socialNetwork.getCentralUser() != null) { 
+		// ArrayList of all the Central User's friends
+		List<String> friends = new ArrayList<>();
+		friends = socialNetwork.getFriendsOf(socialNetwork.getCentralUser());
+		
+		
+		VBox vbox = new VBox();
+		vbox.setPadding(new Insets(10));
+		vbox.setSpacing(8);
+
+		Text center = new Text(socialNetwork.getCentralUser() + " Friends:");
+		center.setFont(Font.font("Arial", FontWeight.BOLD, 12));
+		vbox.getChildren().add(center);
+
+		Button friend;
+
+		if (friends !=null) {
+			for (int i = 0; i < friends.size(); i++) {
+				friend = new Button(friends.get(i));
+				vbox.setMargin(friend, new Insets(0, 0, 0, 8));
+				vbox.getChildren().add(friend);
+			}
+		}
+		return vbox;
+		}
+		return new VBox();
+	}
 
 	/*
-	 * Private helper method used to set a new central user in the graph.
+	 * Private helper method used to set a new central user in the socialNetwork.
 	 */
 	private void setCenter() {
 		TextInputDialog dialog = new TextInputDialog();
@@ -371,7 +409,7 @@ public class Main extends Application {
 	}
 
 	/*
-	 * Private helper method used to remove a user from the graph.
+	 * Private helper method used to remove a user from the socialNetwork.
 	 */
 	private void removeUser() {
 		TextInputDialog dialog = new TextInputDialog();
@@ -388,7 +426,7 @@ public class Main extends Application {
 	}
 
 	/*
-	 * Private helper method used to add a friendship to the graph.
+	 * Private helper method used to add a friendship to the socialNetwork.
 	 */
 	private void addFriend() {
 		// Create the custom dialog.
@@ -440,7 +478,7 @@ public class Main extends Application {
 	}
 
 	/*
-	 * Private helper method used to remove a friendship from the graph.
+	 * Private helper method used to remove a friendship from the socialNetwork.
 	 */
 	private void removeFriend() {
 		// Create the custom dialog.
@@ -507,7 +545,7 @@ public class Main extends Application {
 	}
 
 	/*
-	 * Private helper method used to display the updates (changes) to the graph.
+	 * Private helper method used to display the updates (changes) to the socialNetwork.
 	 */
 	private void updates() {
 		Alert alert = new Alert(AlertType.INFORMATION);
@@ -682,7 +720,7 @@ public class Main extends Application {
 
 	/*
 	 * Private helper method used to find the mutual friends between two users in
-	 * the graph.
+	 * the socialNetwork.
 	 */
 	private void mutualFriend() {
 		// Create the custom dialog.
@@ -732,23 +770,59 @@ public class Main extends Application {
 			}
 		});
 	}
+	
+
+	public String mutualFriendsText(String user1, String user2) {
+		String mutuals = "Here are the mutual friends of " + user1 + " and " + user2 + ": ";
+		List<String> mutualFriends = socialNetwork.getMutualFriends(user1, user2);
+		for (int i = 0; i < mutualFriends.size(); i++) {
+			if (i == mutualFriends.size() - 1) {
+				return mutuals + mutualFriends.get(i) + ".";
+			}
+			mutuals = mutuals + mutualFriends.get(i) + ", ";
+		}
+		return user1 + " and " + user2 + " have no mutual friends.";
+	}
+
+	public String shortestFriendPath(String user1, String user2) {
+		List<String> path = new ArrayList<String>();
+		path = socialNetwork.getShortestPath(user1, user2);
+		String message = "";
+		if (path != null) {
+			if (path.size() == 2) {
+				return new String("These users are friends, so the shortest path directly connects them!");
+			} else {
+				for (int i = 0; i < path.size(); i++) {
+					if (i == 0) {
+						message = user1 + " <-> ";
+					} else if (i == path.size() - 1) {
+						message = message + user2;
+					} else {
+						message = message + path.get(i) + " <-> ";
+					}
+				}
+				
+			}
+		}
+		return message;
+	}
 
 	/*
 	 * Private helper method used to display the mutual friends between two users in
-	 * the graph.
+	 * the socialNetwork.
 	 */
 	private void mutualResult(String user1, String user2) {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Mutual Friends");
 		alert.setHeaderText("There is a list of mutual frinds between " + user1 + "and " + user2 + ":");
-		String result = graph.mutualFriendsText(user1, user2);
+		String result = mutualFriendsText(user1, user2);
 		alert.setContentText(result);
 		alert.showAndWait();
 	}
 
 	/*
 	 * Private helper method used to find the shortest path between two users in the
-	 * graph.
+	 * socialNetwork.
 	 */
 	private void shortestPath() {
 		// Create the custom dialog.
@@ -801,13 +875,13 @@ public class Main extends Application {
 
 	/*
 	 * Private helper method used to display the shortest path between two nodes in
-	 * the graph.
+	 * the socialNetwork.
 	 */
 	private void shortestResult(String user1, String user2) {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Shortest Path");
 		alert.setHeaderText("The shortest path between " + user1 + " and " + user2 + " is:");
-		String result = graph.shortestFriendPath(user1, user2);
+		String result = shortestFriendPath(user1, user2);
 		if (result == "") {
 			result = user1 + " and " + user2 + " are not connected";
 		}
@@ -816,7 +890,7 @@ public class Main extends Application {
 	}
 
 	/*
-	 * Private helper method used to display the statistics of the graph.
+	 * Private helper method used to display the statistics of the socialNetwork.
 	 */
 	private void statistics() {
 		Alert alert = new Alert(AlertType.INFORMATION);

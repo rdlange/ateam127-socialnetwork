@@ -830,7 +830,12 @@ public class Main extends Application {
 		});
 	}
 	
-
+	/*
+    	 * Returns a list of mutual friends between the two specified users as a String.
+     	 *	 
+     	 * @param user1 - First user specified
+     	 * @param user2 - Second user specified
+     	 */
 	public String mutualFriendsText(String user1, String user2) {
 		String mutuals = "Here are the mutual friends of " + user1 + " and " + user2 + ": ";
 		List<String> mutualFriends = socialNetwork.getMutualFriends(user1, user2);
@@ -844,7 +849,13 @@ public class Main extends Application {
 		}
 		return user1 + " and " + user2 + " have no mutual friends.";
 	}
-
+	
+	/*
+    	 * Returns the shortest path between the two specified users as a String.
+    	 * 
+      	 * @param user1 - First user specified
+     	 * @param user2 - Second user specified
+         */
 	public String shortestFriendPath(String user1, String user2) {
 		List<String> path = new ArrayList<String>();
 		path = socialNetwork.getShortestPath(user1, user2);
@@ -977,6 +988,10 @@ public class Main extends Application {
 		alert.showAndWait();
 	}
 	
+	/*
+     	 * Private helper method used to display a warning popup when the user tries to remove
+     	 * the central user.
+     	 */
 	private void removeC() {
 		Alert alert = new Alert(AlertType.WARNING);
 		alert.setTitle("Invalid input");

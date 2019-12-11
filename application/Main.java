@@ -1,5 +1,5 @@
 /**
- * Main displayed the GUI used by the Social Network visualizer.
+ * Main displays the GUI used by the Social Network visualizer.
  * 
  * Filename: Main.java
  * Project: A-Team project (Social Network)
@@ -873,7 +873,7 @@ public class Main extends Application {
 		String message = "";
 		if (path != null) {
 			if (path.size() == 2) {
-				return new String("These users are friends, so the shortest path directly connects them!");
+				return new String("These users are friends, so they are directly connected!");
 			} else {
 				for (int i = 0; i < path.size(); i++) {
 					if (i == 0) {

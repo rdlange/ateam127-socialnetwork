@@ -134,10 +134,12 @@ public class SocialNetwork {
 		List<String> user1Friends = graph.getAdjacentVerticesOf(person1);
 		List<String> user2Friends = graph.getAdjacentVerticesOf(person2);
 		List<String> mutualFriends = new ArrayList<String>();
-		for (String friendOfUser1 : user1Friends) {
-			for (String friendOfUser2 : user2Friends) {
-				if (friendOfUser1.equals(friendOfUser2)) {
-					mutualFriends.add(friendOfUser1);
+		if (user1Friends != null && user2Friends !=null) {
+			for (String friendOfUser1 : user1Friends) {
+				for (String friendOfUser2 : user2Friends) {
+					if (friendOfUser1.equals(friendOfUser2)) {
+						mutualFriends.add(friendOfUser1);
+					}
 				}
 			}
 		}
@@ -222,6 +224,7 @@ public class SocialNetwork {
 	 * @param central user to set as central user
 	 */
 	public void setCentral(String central) {
+		graph.addVertex(central);
 		centralUser = central;
 		log.add("s " + centralUser);
 	}

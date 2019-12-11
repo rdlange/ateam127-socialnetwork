@@ -1,9 +1,8 @@
-package application;
-
 /**
- * Undirected and unweighted graph implementation used by the Social Network visualizer.
+ * This class creates a visual representation of a graph created by a SocialNetwork object. The
+ * graph constructed by this class is then displayed using the Main method.
  * 
- * Filename: Graph.java
+ * Filename: NetworkGraph.java
  * Project: A-Team project (Social Network)
  * Authors: Robert Lange, Yu Long, Joe Hershey, Kevin Xiao, Lukas Her
  * Email: rdlange2@wisc.edu, long27@wisc.edu, joehershey@wisc.edu, klxiao@wisc.edu, lnher2@wisc.edu
@@ -11,295 +10,119 @@ package application;
  * Due: December 11th, 2019 (11:59pm) 
  */
 
+package application;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.HashSet;
 
-/**
- * This is the graph implementation that is used by the social network. It
- * is an undirected directed, unweighted graph consisting of vertices. The vertices store
- * strings and adjacency lists.
- */
-public class Graph {
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
-	// the vertexList stores a list of all vertices currently in the graph
-	private List<GraphNode<String>> vertexList;
-	// the order of the graph is the number of vertices that exist in the graph
-	private int order;
-	// the size of the graph is the number of edges that exist between nodes in the
-	// graph
-	private int size;
+/*
+* The NetworkGraph class displays a visual graph according to the data in its SocialNetwork object.
+*/
+public class NetworkGraph {
+
+	private SocialNetwork network; // SocialNetwork object used to access its users and methods
+	//private String centralUser; // the current central user in this graph
 
 	/*
-	 * Default no-argument constructor
-	 */
-	public Graph() {
-		this.vertexList = new ArrayList<GraphNode<String>>();
-	}
-
-	private class GraphNode<T> {
-		// the data stored by this node
-		private String data;
-		// the adjacencyList contains a list of adjacent vertices
-		private List<GraphNode<String>> adjacencyList;
-		// construct a vertex with the value 'vertex' and an adjacency list.
-		private GraphNode(String vertex) {
-			this.data = vertex;
-			this.adjacencyList = new ArrayList<GraphNode<String>>();
-		}
-	}
-
-	/**
-	 * Add new vertex to the graph. Does not add null vertices or vertices
-	 * already in the graph.
+	 * Constructor used to create a NetworkGraph object with a given central user
+	 * and SocialNetwork object.
 	 *
-	 * @param vertex - The data to store in the new vertex
-	 */
-	public void addVertex(String vertex) {
-		// do not add the vertex if it is null
-		if (vertex == null) {
-			return;
-		}
-		// if the vertex already exists in the graph, do not add it to the graph
-		for (int i = 0; i < vertexList.size(); ++i) {
-			if (vertexList.get(i) != null && vertexList.get(i).data.equals(vertex)) {
-				return;
-			}
-		}
-		// construct a new graph node containing the non-null vertex and add it to the
-		// vertexList.
-		// then increase the order (number of vertices) of the graph.
-		GraphNode<String> S = new GraphNode<String>(vertex);
-		vertexList.add(S);
-		this.order++;
-	}
-
-	/**
-	 * Remove a vertex and its edges from the graph.
+	 * @param centralUser - the name of the central user in the SocialNetwork object
 	 * 
-	 * @param vertex - the vertex to remove from the graph
+	 * @param network - the SocialNetwork object used by this NetworkGraph
 	 */
-	public void removeVertex(String vertex) {
-		// remove any edges connecting to the removed vertex by checking the edges of
-		// each node
-		for (GraphNode<String> currentVertex : vertexList) {
-			// check all the edges in the graph and delete any edges going from an adjacent
-			// vertex to the
-			// deleted vertex
-			for (int i = 0; i < currentVertex.adjacencyList.size(); i++) {
-				if (currentVertex.adjacencyList.get(i).data.equals(vertex)) {
-					currentVertex.adjacencyList.remove(i);
-					//this.size--;
-				}
-			}
-			// delete any edges going from this vertex to any other vertices
-			if (this.getAdjacentVerticesOf(vertex) != null) {
-				for (String adjacent : this.getAdjacentVerticesOf(vertex)) {
-					this.removeEdge(vertex, adjacent);
-				}
-			}
-		}
-		// remove the vertex from the graph (if it exists in the graph)
-		GraphNode<String> vertexToRemove = getVertexFromString(vertex);
-		// if the vertex was found, remove it from the vertexList and decrease the
-		// number of vertices in the graph.
-		if (vertexToRemove != null) {
-			this.vertexList.remove(getVertexFromString(vertex));
-			this.order--;
-		}
+	public NetworkGraph(String centralUser, SocialNetwork network) {
+		this.network = network;
+		//this.centralUser = centralUser;
 	}
-
-	/**
-	 * Private helper method used to find a graph node from a provided string.
-	 * Primarily used in remove to remove a vertex from the graph.
-	 * 
-	 * @param vertex - the vertex string to find in the matching node
-	 * @return a reference to the node with the matching value, null if this node is
-	 *         not in the graph
-	 */
-	private GraphNode<String> getVertexFromString(String vertex) {
-		for (GraphNode<String> currentVertex : vertexList) {
-			if (currentVertex.data.equals(vertex)) {
-				return currentVertex;
-			}
-		}
-		// if the vertex node is not found in the graph, return null
-		return null;
-	}
-
-	/**
-	 * Add the edge between two vertices in the graph. (edge is undirected and
-	 * unweighted). If either vertex does not exist in the graph, add it to the
-	 * graph and then insert the edge.
-	 *
-	 * @param vertex1 - the first vertex to add the new edge to
-	 * @param vertex2 - the second vertex to add the new edge to
-	 */
-	public void addEdge(String vertex1, String vertex2) {
-		// do not add an edge between the vertices if either one is null
-		if (vertex1 == null || vertex2 == null) {
-			return;
-		}
-		// keep a reference to the starting vertex (where the edge comes from) and the
-		// ending vertex
-		// (where the edge goes to)
-		GraphNode<String> startVertex = null;
-		GraphNode<String> endVertex = null;
-		// if vertex1 does not exist, create it in the graph
-		if (!this.getAllVertices().contains(vertex1)) {
-			this.addVertex(vertex1);
-		}
-		// if vertex2 does not exist, create it in the graph
-		if (!this.getAllVertices().contains(vertex2)) {
-			this.addVertex(vertex2);
-		}
-		// set the startVertex and endVertex references
-		for (GraphNode<String> node : vertexList) {
-			if (node.data.equals(vertex1)) {
-				startVertex = node;
-			}
-			if (node.data.equals(vertex2)) {
-				endVertex = node;
-			}
-		}
-		// if the startVertex does not already contain an edge pointing to the
-		// endVertex, add the edge
-		// and increase the size of the graph
-		if (!startVertex.adjacencyList.contains(endVertex)) {
-			startVertex.adjacencyList.add(endVertex);
-			endVertex.adjacencyList.add(startVertex);
-			this.size++;
-		}
-	}
-
-	/**
-	 * Remove the edge between vertex1 and vertex2 from this graph. Do nothing if
-	 * the edge does not exist between these vertices.
-	 */
-	public void removeEdge(String vertex1, String vertex2) {
-		// get references to both vertices
-		GraphNode<String> firstVertex = this.getVertexFromString(vertex1);
-		GraphNode<String> secondVertex = this.getVertexFromString(vertex2);
-		// only remove the edge and decrease the size if the two vertices exist in the
-		// graph and an edge exists from vertex1 to vertex2.
-		if (firstVertex != null && firstVertex.adjacencyList.contains(secondVertex)) {
-			firstVertex.adjacencyList.remove(secondVertex);
-			secondVertex.adjacencyList.remove(firstVertex);
-			this.size--;
-		}
-	}
-
-	/**
-	 * Returns a list that contains all the vertices
-	 * 
-	 * @return an ArrayList containing all the vertices in the graph
-	 */
-	public List<String> getAllVertices() {
-		// store all the vertices in the graph in an ArrayList
-		List<String> vertices = new ArrayList<String>();
-		for (GraphNode<String> node : vertexList) {
-			vertices.add(node.data);
-		}
-		return vertices;
-	}
-
-	/**
-	 * Get all the neighbor (adjacent) vertices of a vertex
-	 *
-	 * @param vertex - the vertex to find adjacent vertices of
-	 * @return a list of vertices adjacent to this vertex, null if the vertex is not
-	 *         in the graph
-	 */
-	public List<String> getAdjacentVerticesOf(String vertex) {
-		// store an array of vertices adjacent to this one
-		List<String> adjacentVertices = new ArrayList<String>();
-		// store a reference to the vertex to get adjacent vertices of
-		GraphNode<String> vertexMatch = null;
-		// find the matching vertex in the graph by checking all the graph's vertices
-		for (GraphNode<String> node : vertexList) {
-			if (node.data.equals(vertex)) {
-				vertexMatch = node;
-				break;
-			}
-		}
-		// if the matching vertex was found, construct and return the list of adjacent
-		// vertices
-		if (vertexMatch != null) {
-			for (GraphNode<String> node : vertexMatch.adjacencyList) {
-				adjacentVertices.add(node.data);
-			}
-			return adjacentVertices;
-		}
-		// if the vertex is not in the graph, return null
-		return null;
-	}
-
-    private void DFSUtil(int v, boolean [] visited) {
-    	visited[v] = true;
-    	for (int i = 0; i < getAllVertices().size(); i++) {
-        	   if (!visited[i]) {
-            	DFSUtil(i, visited);
-        	}
-    }
-}
-/**
- * Returns the number of connected components in this social network.
- *
- * @return the number of connected components in this graph
- */
-public int connectedComponent(){
-// TODO: General idea: For each user in the social network,
-// 1. mark the user as visited
-// 2. look for unvisited friends
-// 3. recursively call helper method on those friends
-// 4a. repeat until no more users in this component are unvisited. 
-// 4b. add 1 to the number of connected components.
-// 5a. check the next user in the graph 
-// 5b. if they are visited, go to the next user.
-// 5c. otherwise, check the connected component that this user is a part of for other users
-// 6. repeat this process until every user in the graph has been checked.
-// 7. return the total number of connected components
-    int connectedComponents = 0;
-    int V = order();
-    boolean[] visited = new boolean[V];
-    for (int v = 0; v < V; v++) {
-        if (!visited[v]) {
-            DFSUtil(v, visited);
-        }
-        connectedComponents++;
-    }
-    return connectedComponents;
-}
-
-// Driver program to test above 
-public static void main(String[] args){ 
-    Graph g = new Graph();
-
-    g.addEdge("1", "0"); 
-    g.addEdge("0", "9");
-    g.addEdge("2", "3");  
-    g.addEdge("3", "4"); 
-    g.addEdge("4", "5");
-    g.addEdge("6", "7");
-    System.out.println(g.connectedComponent());         
-}
 	
-	/**
-	 * Returns the number of edges in this graph.
-	 * 
-	 * @return the size of this graph (the number of edges).
+	public NetworkGraph() {
+		this.network = new SocialNetwork();
+		//this.centralUser = "";
+	}
+	
+	/*
+	 * Returns the name of the central user in this graph visualization.
+	 *
+	 * @return the name of the central user
 	 */
-	public int size() {
-		return this.size;
+	public String getCentralUser() {
+		return network.getCentralUser();
 	}
 
-	/**
-	 * Returns the number of vertices in this graph.
-	 * 
-	 * @return the order of this graph (the number of vertices).
+	/*
+	 * Returns the visual component to be displayed on the GUI defined in main.
+	 *
+	 * @return a vbox containing all the users to be displayed in the visual graph.
 	 */
-	public int order() {
-		return this.order;
+	public VBox visualizeGraph() {
+		if (this.getCentralUser() != null) { 
+		// ArrayList of all the Central User's friends
+		List<String> friends = new ArrayList<>();
+		friends = network.getFriendsOf(this.getCentralUser());
+		
+		
+		VBox vbox = new VBox();
+		vbox.setPadding(new Insets(10));
+		vbox.setSpacing(8);
+
+		Text center = new Text(this.getCentralUser() + " Friends:");
+		center.setFont(Font.font("Arial", FontWeight.BOLD, 12));
+		vbox.getChildren().add(center);
+
+		Button friend;
+
+		if (friends !=null) {
+			for (int i = 0; i < friends.size(); i++) {
+				friend = new Button(friends.get(i));
+				vbox.setMargin(friend, new Insets(0, 0, 0, 8));
+				vbox.getChildren().add(friend);
+			}
+		}
+		return vbox;
+		}
+		return new VBox();
+	}
+
+	public String mutualFriendsText(String user1, String user2) {
+		String mutuals = "Here are the mutual friends of " + user1 + " and " + user2 + ": ";
+		List<String> mutualFriends = network.getMutualFriends(user1, user2);
+		for (int i = 0; i < mutualFriends.size(); i++) {
+			if (i == mutualFriends.size() - 1) {
+				return mutuals + mutualFriends.get(i) + ".";
+			}
+			mutuals = mutuals + mutualFriends.get(i) + ", ";
+		}
+		return user1 + " and " + user2 + " have no mutual friends.";
+	}
+
+	public String shortestFriendPath(String user1, String user2) {
+		List<String> path = new ArrayList<String>();
+		path = network.getShortestPath(user1, user2);
+		String message = "";
+		if (path != null) {
+			if (path.size() == 2) {
+				return new String("These users are friends, so the shortest path directly connects them!");
+			} else {
+				for (int i = 0; i < path.size(); i++) {
+					if (i == 0) {
+						message = user1 + " <-> ";
+					} else if (i == path.size() - 1) {
+						message = message + user2;
+					} else {
+						message = message + path.get(i) + " <-> ";
+					}
+				}
+				
+			}
+		}
+		return message;
 	}
 }

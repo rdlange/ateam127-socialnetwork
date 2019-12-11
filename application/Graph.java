@@ -208,55 +208,6 @@ public class Graph {
 		// if the vertex is not found, return null
 		return null;
 	}
-       private void DFSUtil(int v, boolean [] visited) {
-        	visited[v] = true;
-        	for (int i = 0; i < getAllVertices().size(); i++) {
-            	   if (!visited[i]) {
-                	DFSUtil(i, visited);
-            	}
-        }
-    }
-    /**
-     * Returns the number of connected components in this social network.
-     *
-     * @return the number of connected components in this graph
-     */
-    public int connectedComponent(){
-    // TODO: General idea: For each user in the social network,
-    // 1. mark the user as visited
-    // 2. look for unvisited friends
-    // 3. recursively call helper method on those friends
-    // 4a. repeat until no more users in this component are unvisited. 
-    // 4b. add 1 to the number of connected components.
-    // 5a. check the next user in the graph 
-    // 5b. if they are visited, go to the next user.
-    // 5c. otherwise, check the connected component that this user is a part of for other users
-    // 6. repeat this process until every user in the graph has been checked.
-    // 7. return the total number of connected components
-        int connectedComponents = 0;
-        int V = order();
-        boolean[] visited = new boolean[V];
-        for (int v = 0; v < V; v++) {
-            if (!visited[v]) {
-                DFSUtil(v, visited);
-            }
-            connectedComponents++;
-        }
-        return connectedComponents;
-    }
-
-    // Driver program to test above 
-    public static void main(String[] args){ 
-        Graph g = new Graph();
-          
-        g.addEdge("1", "0"); 
-        g.addEdge("0", "9");
-        g.addEdge("2", "3");  
-        g.addEdge("3", "4"); 
-        g.addEdge("4", "5");
-        g.addEdge("6", "7");
-        System.out.println(g.connectedComponent());         
-    }
 
 	/**
 	 * Returns the number of edges in the graph.

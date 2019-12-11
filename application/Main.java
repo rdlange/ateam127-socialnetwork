@@ -92,7 +92,9 @@ public class Main extends Application {
 				VBox leftBox = new VBox();
 				leftBox.setSpacing(160.0);
 				leftBox.getChildren().add(new Label(""));
-				leftBox.getChildren().add(new Button(socialNetwork.getCentralUser()));
+				Button centralb = new Button(socialNetwork.getCentralUser());
+				centralb.setMnemonicParsing(false);
+				leftBox.getChildren().add(centralb);
 				root.setLeft(leftBox);
 				VBox center = new VBox();
 				center.setSpacing(160.0);
@@ -112,7 +114,9 @@ public class Main extends Application {
 				VBox leftBox = new VBox();
 				leftBox.setSpacing(160.0);
 				leftBox.getChildren().add(new Label(""));
-				leftBox.getChildren().add(new Button(socialNetwork.getCentralUser()));
+				Button centralb = new Button(socialNetwork.getCentralUser());
+				centralb.setMnemonicParsing(false);
+				leftBox.getChildren().add(centralb);
 				root.setLeft(leftBox);
 				VBox center = new VBox();
 				center.setSpacing(160.0);
@@ -129,6 +133,13 @@ public class Main extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				removeUser();
+				VBox leftBox = new VBox();
+				leftBox.setSpacing(160.0);
+				leftBox.getChildren().add(new Label(""));
+				Button centralb = new Button(socialNetwork.getCentralUser());
+				centralb.setMnemonicParsing(false);
+				leftBox.getChildren().add(centralb);
+				root.setLeft(leftBox);
 				VBox center = new VBox();
 				center.setSpacing(160.0);
 				center.getChildren().add(new Label(""));
@@ -147,7 +158,9 @@ public class Main extends Application {
 				VBox leftBox = new VBox();
 				leftBox.setSpacing(160.0);
 				leftBox.getChildren().add(new Label(""));
-				leftBox.getChildren().add(new Button(socialNetwork.getCentralUser()));
+				Button centralb = new Button(socialNetwork.getCentralUser());
+				centralb.setMnemonicParsing(false);
+				leftBox.getChildren().add(centralb);
 				root.setLeft(leftBox);
 				VBox center = new VBox();
 				center.setSpacing(160.0);
@@ -164,6 +177,13 @@ public class Main extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				removeFriend();
+				VBox leftBox = new VBox();
+				leftBox.setSpacing(160.0);
+				leftBox.getChildren().add(new Label(""));
+				Button centralb = new Button(socialNetwork.getCentralUser());
+				centralb.setMnemonicParsing(false);
+				leftBox.getChildren().add(centralb);
+				root.setLeft(leftBox);
 				VBox center = new VBox();
 				center.setSpacing(160.0);
 				center.getChildren().add(new Label(""));
@@ -183,6 +203,18 @@ public class Main extends Application {
 				if (file != null) {
 					try {
 						socialNetwork.uploadNetwork(file);
+						VBox leftBox = new VBox();
+						leftBox.setSpacing(160.0);
+						leftBox.getChildren().add(new Label(""));
+						Button centralb = new Button(socialNetwork.getCentralUser());
+						centralb.setMnemonicParsing(false);
+						leftBox.getChildren().add(centralb);
+						root.setLeft(leftBox);
+						VBox center = new VBox();
+						center.setSpacing(160.0);
+						center.getChildren().add(new Label(""));
+						center.getChildren().add(visualizeGraph());
+						root.setCenter(center);
 					} catch (IllegalArgumentException e1) {
 						mistake();
 					} catch (Exception e2) {
@@ -219,7 +251,9 @@ public class Main extends Application {
 				VBox leftBox = new VBox();
 				leftBox.setSpacing(160.0);
 				leftBox.getChildren().add(new Label(""));
-				leftBox.getChildren().add(new Button(socialNetwork.getCentralUser()));
+				Button centralb = new Button(socialNetwork.getCentralUser());
+				centralb.setMnemonicParsing(false);
+				leftBox.getChildren().add(centralb);
 				root.setLeft(leftBox);
 				VBox center = new VBox();
 				center.setSpacing(160.0);
@@ -364,6 +398,7 @@ public class Main extends Application {
 			for (int i = 0; i < friends.size(); i++) {
 				final Button friend;
 				friend = new Button(friends.get(i));
+				friend.setMnemonicParsing(false);
 				friend.setOnAction(new EventHandler<ActionEvent>() {
 					@Override
 					public void handle(ActionEvent event) {
@@ -440,7 +475,12 @@ public class Main extends Application {
 			invalid();
 		}
 		if (result.isPresent() && !result.get().isEmpty()) {
-			socialNetwork.removePerson(result.get());
+			if (result.get().equals(socialNetwork.getCentralUser())) {
+				removeC();
+			}
+			else {
+				socialNetwork.removePerson(result.get());
+			}
 		}
 	}
 
@@ -794,11 +834,13 @@ public class Main extends Application {
 	public String mutualFriendsText(String user1, String user2) {
 		String mutuals = "Here are the mutual friends of " + user1 + " and " + user2 + ": ";
 		List<String> mutualFriends = socialNetwork.getMutualFriends(user1, user2);
-		for (int i = 0; i < mutualFriends.size(); i++) {
-			if (i == mutualFriends.size() - 1) {
-				return mutuals + mutualFriends.get(i) + ".";
+		if (mutualFriends != null) {
+			for (int i = 0; i < mutualFriends.size(); i++) {
+				if (i == mutualFriends.size() - 1) {
+					return mutuals + mutualFriends.get(i) + ".";
+				}
+				mutuals = mutuals + mutualFriends.get(i) + ", ";
 			}
-			mutuals = mutuals + mutualFriends.get(i) + ", ";
 		}
 		return user1 + " and " + user2 + " have no mutual friends.";
 	}
@@ -931,6 +973,15 @@ public class Main extends Application {
 		alert.setTitle("Invalid input");
 		alert.setHeaderText(null);
 		alert.setContentText("Invalid input. Please try again.");
+
+		alert.showAndWait();
+	}
+	
+	private void removeC() {
+		Alert alert = new Alert(AlertType.WARNING);
+		alert.setTitle("Invalid input");
+		alert.setHeaderText(null);
+		alert.setContentText("Cannot remove central user");
 
 		alert.showAndWait();
 	}

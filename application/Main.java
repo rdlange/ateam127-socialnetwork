@@ -65,7 +65,6 @@ public class Main extends Application {
 	private static final int WINDOW_HEIGHT = 640;
 	private static final String APP_TITLE = "GetSocial - Social Network Visaulizer";
 	private SocialNetwork socialNetwork = new SocialNetwork();
-	private NetworkGraph graph = new NetworkGraph("", socialNetwork);
 	BorderPane root = new BorderPane();
 
 	/*
@@ -81,7 +80,6 @@ public class Main extends Application {
 		// place the logo in the top panel
 		Image logo = new Image("logo.png");
 		ImageView logoView = new ImageView(logo);
-
 		VBox network = visualizeGraph();
 
 		// create the 'Set Central User' button
@@ -277,7 +275,7 @@ public class Main extends Application {
 		});
 
 		// create the 'Connected Components' button
-		Button connectedComponentButton = new Button("Connected Components");
+		Button connectedComponentButton = new Button("Statistics");
 		connectedComponentButton.setMinSize(150, 50);
 		connectedComponentButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -360,11 +358,18 @@ public class Main extends Application {
 		center.setFont(Font.font("Arial", FontWeight.BOLD, 12));
 		vbox.getChildren().add(center);
 
-		Button friend;
+		
 
 		if (friends !=null) {
 			for (int i = 0; i < friends.size(); i++) {
+				final Button friend;
 				friend = new Button(friends.get(i));
+				friend.setOnAction(new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent event) {
+						clickSet(friend.getText());
+					}
+				});
 				vbox.setMargin(friend, new Insets(0, 0, 0, 8));
 				vbox.getChildren().add(friend);
 			}
@@ -374,6 +379,20 @@ public class Main extends Application {
 		return new VBox();
 	}
 
+	private void clickSet(String name) {
+		socialNetwork.setCentral(name);
+		VBox leftBox = new VBox();
+		leftBox.setSpacing(160.0);
+		leftBox.getChildren().add(new Label(""));
+		leftBox.getChildren().add(new Button(socialNetwork.getCentralUser()));
+		root.setLeft(leftBox);
+		VBox center = new VBox();
+		center.setSpacing(160.0);
+		center.getChildren().add(new Label(""));
+		center.getChildren().add(visualizeGraph());
+		root.setCenter(center);
+	}
+	
 	/*
 	 * Private helper method used to set a new central user in the socialNetwork.
 	 */
@@ -894,8 +913,6 @@ public class Main extends Application {
 	 */
 	private void statistics() {
 		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("Connected Components");
-		alert.setHeaderText("The number of connected components is:");
 		alert.setTitle("Social Network Statistics");
 		alert.setHeaderText("Here are some statistics for you graph");
 		int result = socialNetwork.connectedComponent();

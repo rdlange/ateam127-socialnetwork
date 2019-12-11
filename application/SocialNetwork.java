@@ -225,36 +225,71 @@ public class SocialNetwork {
 		centralUser = central;
 		log.add("s " + centralUser);
 	}
-
 	/**
 	 * Returns the number of connected components in this social network.
 	 *
 	 * @return the number of connected components in this graph
 	 */
 	public int connectedComponent() {
-		// TODO: General idea: For each user in the social network,
-		// 1. mark the user as visited
-		// 2. look for unvisited friends
-		// 3. recursively call helper method on those friends
-		// 4a. repeat until no more users in this component are unvisited.
-		// 4b. add 1 to the number of connected components.
-		// 5a. check the next user in the graph
-		// 5b. if they are visited, go to the next user.
-		// 5c. otherwise, check the connected component that this user is a part of for
-		// other users
-		// 6. repeat this process until every user in the graph has been checked.
-		// 7. return the total number of connected components
-		return 0;
+		// store the number of components
+		int numComponents = 0;
+		// store a list of all the visited vertices in the graph
+		ArrayList<String> visited = new ArrayList<String>();
+		// if the graph contains at least one node, count the number of components.
+		// otherwise, return 0.
+		if (graph.order() > 0) {
+			// for each user in the graph, increase the number of components if the user is
+			// in a unique component.
+			for (String user : graph.getAllVertices()) {
+				// only count the component if it has not been counted yet
+				if (!visited.contains(user)) {
+					connectedComponentHelper(user, visited);
+					numComponents++;
+				}
+
+			}
+		}
+		// return the total number of components in the social network.
+		return numComponents;
 	}
-	
+
+	/*
+	 * Private helper method used to mark users in the current component as visited.
+	 * Used to ensure that every user in a given component is counted.
+	 * 
+	 * @param currentUser - the current user to visit and check for friends
+	 * @param visited - a list of all the users that have been visited
+	 */
+	private void connectedComponentHelper(String currentUser, ArrayList<String> visited) {
+		// mark the current user as visited
+		visited.add(currentUser);
+		// for each of the user's friends, recursively call this method and mark the
+		// friend as visited (if they have not been visited already)
+		for (String user : graph.getAdjacentVerticesOf(currentUser)) {
+			// only do a recursive call if the friend is not visited yet
+			if (!visited.contains(user)) {
+				this.connectedComponentHelper(user, visited);
+			}
+		}
+	}
+
+	/*
+	 * Returns the number of vertices (users) in this social network
+	 * 
+	 * @return the number of vertices in the social network graph
+	 */
 	public int numOfVertices() {
 		return graph.order();
-		
+
 	}
-	
+
+	/*
+	 * Returns the number of friendships (edges) in this social network
+	 * 
+	 * @return the number of edges in the social network graph
+	 */
 	public int numOfEdges() {
 		return graph.size();
-		
 	}
 
 	/**
